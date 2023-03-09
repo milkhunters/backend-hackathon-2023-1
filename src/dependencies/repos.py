@@ -1,5 +1,5 @@
 from fastapi.requests import Request
-from starlette.websockets import WebSocket
+from fastapi.websockets import WebSocket
 
 from src.services.repository import RepoFactory
 
