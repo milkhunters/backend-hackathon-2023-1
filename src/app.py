@@ -8,14 +8,14 @@ from fastapi.openapi.utils import get_openapi
 from src.models import tables
 from src.db import create_psql_async_session, create_sqlite_async_session
 from src.middleware import JWTMiddlewareHTTP
-from src.config import load_ini_config
+from src.config import load_consul_config
 from src.exceptions import APIError, handle_api_error, handle_404_error, handle_pydantic_error
 
 from src.router import reg_root_api_router
 from src.services.storage.s3 import S3Storage
 from src.utils import RedisClient, AiohttpClient
 
-config = load_ini_config('./config.ini')
+config = load_consul_config("hackathon-2023-1", host="192.168.3.41")
 log = logging.getLogger(__name__)
 
 log.debug("Инициализация приложения FastAPI.")
