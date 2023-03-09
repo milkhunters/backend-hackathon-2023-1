@@ -42,7 +42,7 @@ class BaseRepository(Generic[T]):
         """
         return (await self._conn.execute(select(self.table).filter_by(**kwargs).limit(100))).scalars().all()
 
-    async def update(self, id: str, **kwargs) -> None:
+    async def update(self, id: any, **kwargs) -> None:
         """
         Обновляет запись
 
@@ -54,7 +54,7 @@ class BaseRepository(Generic[T]):
             await self._conn.execute(update(self.table).where(self.table.id == id).values(**kwargs))
             await self._conn.commit()
 
-    async def delete(self, id: str) -> None:
+    async def delete(self, id: any) -> None:
         """
         Удаляет запись
 

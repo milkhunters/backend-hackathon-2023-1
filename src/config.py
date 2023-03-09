@@ -12,7 +12,7 @@ class RedisConfig:
     HOST: Optional[str]
     PASSWORD: Optional[str]
     USERNAME: Optional[str]
-    PORT: Optional[int] = 6379
+    PORT: int = 6379
 
 
 @dataclass
@@ -71,7 +71,7 @@ class KVManager:
         """
         path = "/".join([self.root_name, *args])
         encode_value = self.config.get(path)[1]
-        if encode_value:
+        if encode_value and encode_value["Value"]:
             value: str = encode_value['Value'].decode("utf-8")
             if value.isdigit():
                 return int(value)
@@ -123,23 +123,23 @@ def load_consul_config(
                 EMAIL=config("BASE", "CONTACT", "EMAIL")
             ),
             JWT=JWT(
-                ACCESS_SECRET_KEY=config("JWT", "ACCESS_SECRET_KEY"),
-                REFRESH_SECRET_KEY=config("JWT", "REFRESH_SECRET_KEY")
+                ACCESS_SECRET_KEY=config("BASE", "JWT", "ACCESS_SECRET_KEY"),
+                REFRESH_SECRET_KEY=config("BASE", "JWT", "REFRESH_SECRET_KEY")
             )
         ),
         DB=DbConfig(
             POSTGRESQL=PostgresConfig(
-                HOST=config("DATABASE", "POSTGRESQL", "HOST"),
-                PORT=config("DATABASE", "POSTGRESQL", "PORT"),
-                USERNAME=config("DATABASE", "POSTGRESQL", "USERNAME"),
-                PASSWORD=config("DATABASE", "POSTGRESQL", "PASSWORD"),
-                DATABASE=config("DATABASE", "POSTGRESQL", "DATABASE")
+                HOST=config("DB", "POSTGRESQL", "HOST"),
+                PORT=config("DB", "POSTGRESQL", "PORT"),
+                USERNAME=config("DB", "POSTGRESQL", "USERNAME"),
+                PASSWORD=config("DB", "POSTGRESQL", "PASSWORD"),
+                DATABASE=config("DB", "POSTGRESQL", "DATABASE")
             ),
             REDIS=RedisConfig(
-                HOST="redis",
-                USERNAME=None,
-                PASSWORD=None,
-                PORT=6379
+                HOST=config("DB", "REDIS", "HOST"),
+                USERNAME=config("DB", "REDIS", "USERNAME"),
+                PASSWORD=config("DB", "REDIS", "PASSWORD"),
+                PORT=config("DB", "REDIS", "PORT")
             )
         )
     )

@@ -22,7 +22,7 @@ async def get_current_user(services: ServiceFactory = Depends(get_services)):
 
 @router.get("/{user_id}", response_model=UserSmallResponse, status_code=http_status.HTTP_200_OK)
 async def get_user(user_id: uuid.UUID, services: ServiceFactory = Depends(get_services)):
-    return UserSmallResponse(message=await services.user.get_user(str(user_id)))
+    return UserSmallResponse(message=await services.user.get_user(user_id))
 
 
 @router.post("/update", response_model=None, status_code=http_status.HTTP_204_NO_CONTENT)

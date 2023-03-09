@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy import Column, String, Enum, DateTime, func, Text
 
-# from sqlalchemy import UUID  # Only for psql
+from sqlalchemy import UUID  # Only for psql
 
 from src.db import Base
 
@@ -13,7 +13,7 @@ class User(Base):
     __tablename__ = "users"
     __table_args__ = {'extend_existing': True}
 
-    id = Column(Text(length=36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String(255), unique=True, nullable=False)
     username = Column(String(255), unique=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)

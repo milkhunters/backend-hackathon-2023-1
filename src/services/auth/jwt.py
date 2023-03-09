@@ -72,7 +72,7 @@ class JWTManager:
         return self._generate_token(
             exp_minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES,
             secret_key=self.JWT_ACCESS_SECRET_KEY,
-            id=id,
+            id=id if isinstance(id, str) else str(id),
             username=username,
             role_value=role_value,
         )
@@ -94,7 +94,7 @@ class JWTManager:
             role_value=role_value,
         )
 
-    def generate_tokens(self, id: str, username: str, role_value: int) -> schemas.Tokens:
+    def generate_tokens(self, id: [str | uuid.UUID], username: str, role_value: int) -> schemas.Tokens:
         """
         Генерирует access- и refresh-токены
         :param id:
@@ -103,8 +103,8 @@ class JWTManager:
         :return:
         """
         return schemas.Tokens(
-            access_token=self.generate_access_token(id, username, role_value),
-            refresh_token=self.generate_refresh_token(id, username, role_value)
+            access_token=self.generate_access_token(str(id), username, role_value),
+            refresh_token=self.generate_refresh_token(str(id), username, role_value)
         )
 
     def set_jwt_cookie(self, response: Response, tokens: schemas.Tokens) -> None:

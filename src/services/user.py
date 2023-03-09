@@ -23,7 +23,7 @@ class UserApplicationService:
         return schemas.User.from_orm(await self._repo.get(id=self._current_user.id))
 
     @filters(roles=[UserRole.ADMIN, UserRole.USER])
-    async def get_user(self, user_id: str) -> schemas.UserSmall:
+    async def get_user(self, user_id: uuid.UUID) -> schemas.UserSmall:
         """
         Get user by id # todo: by all fields
         """

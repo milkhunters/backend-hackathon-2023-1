@@ -53,11 +53,16 @@ async def init_postgresql_db():
 
 
 async def redis_pool(db: int = 0):
-    return await redis.from_url(
-        f"redis://:{config.DB.REDIS.PASSWORD}@{config.DB.REDIS.HOST}:{config.DB.REDIS.PORT}/{db}",
+    return await redis.Redis(
+        host=config.DB.REDIS.HOST,
+        port=config.DB.REDIS.PORT,
+        username=config.DB.REDIS.USERNAME,
+        password=config.DB.REDIS.PASSWORD,
+        db=db,
         encoding="utf-8",
         decode_responses=True,
     )
+
 
 @app.on_event("startup")
 async def on_startup():
