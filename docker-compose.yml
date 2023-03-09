@@ -6,6 +6,8 @@ services:
     restart: always
     ports:
       - "8002:80" # [порт компьютера]:[порт контейнера] - всегда путаю )
+    environment:
+      - CONSUL_ROOT
     depends_on:
       - redis
 
