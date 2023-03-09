@@ -1,0 +1,47 @@
+
+[BASE]
+TITLE = FastAPI Boilerplate
+DESCRIPTION = FastAPI Boilerplate
+IS_SECURE_COOKIE = False
+
+
+[CONTACT]
+NAME = Your Name
+URL = https://yourdomain.com
+EMAIL = None
+
+[JWT]
+ACCESS_SECRET_KEY = your_access_secret_key
+REFRESH_SECRET_KEY = your_refresh_secret_key
+
+[POSTGRESQL]
+is_used = False
+HOST = localhost
+PORT = 5432
+USERNAME = some
+PASSWORD = some pass
+DATABASE = some_db
+
+[REDIS]
+is_used = True
+HOST = redis
+USERNAME =
+PASSWORD =
+PORT = 6379
+
+[S3]
+is_used = False
+ENDPOINT_URL = http://localhost:9000
+REGION_NAME = us-east-1
+AWS_ACCESS_KEY_ID = some
+AWS_SECRET_ACCESS_KEY = some pass
+BUCKET = some_bucket
+
+[EMAIL]
+is_used = False
+isTLS = False
+isSSL = False
+HOST = smtp.gmail.com
+PORT = 587
+USER = some
+PASSWORD = some pass
