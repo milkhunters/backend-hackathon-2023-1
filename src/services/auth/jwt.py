@@ -17,7 +17,7 @@ class JWTManager:
 
     COOKIE_EXP = 31536000
     COOKIE_PATH = "/api"
-    COOKIE_DOMAIN = "front.local:8080"
+    COOKIE_DOMAIN = None
     COOKIE_ACCESS_KEY = "access_token"
     COOKIE_REFRESH_KEY = "refresh_token"
 
@@ -118,7 +118,7 @@ class JWTManager:
             key=self.COOKIE_ACCESS_KEY,
             value=tokens.access_token,
             secure=self._config.IS_SECURE_COOKIE,
-            httponly=False,
+            httponly=True,
             samesite="None",
             max_age=self.COOKIE_EXP,
             path=self.COOKIE_PATH,
@@ -128,7 +128,7 @@ class JWTManager:
             key=self.COOKIE_REFRESH_KEY,
             value=tokens.refresh_token,
             secure=self._config.IS_SECURE_COOKIE,
-            httponly=False,
+            httponly=True,
             samesite="None",
             max_age=self.COOKIE_EXP,
             path=self.COOKIE_PATH,
