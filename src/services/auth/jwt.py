@@ -17,7 +17,7 @@ class JWTManager:
 
     COOKIE_EXP = 31536000
     COOKIE_PATH = "/api"
-    COOKIE_DOMAIN = "localhost"
+    COOKIE_DOMAIN = "front.local"
     COOKIE_ACCESS_KEY = "access_token"
     COOKIE_REFRESH_KEY = "refresh_token"
 
