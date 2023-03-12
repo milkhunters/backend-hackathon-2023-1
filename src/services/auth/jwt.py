@@ -118,8 +118,8 @@ class JWTManager:
             key=self.COOKIE_ACCESS_KEY,
             value=tokens.access_token,
             secure=self._config.IS_SECURE_COOKIE,
-            httponly=True,
-            samesite="strict",
+            httponly=False,
+            samesite=None,
             max_age=self.COOKIE_EXP,
             path=self.COOKIE_PATH,
             domain=self.COOKIE_DOMAIN
@@ -128,8 +128,8 @@ class JWTManager:
             key=self.COOKIE_REFRESH_KEY,
             value=tokens.refresh_token,
             secure=self._config.IS_SECURE_COOKIE,
-            httponly=True,
-            samesite="strict",
+            httponly=False,
+            samesite=None,
             max_age=self.COOKIE_EXP,
             path=self.COOKIE_PATH,
             domain=self.COOKIE_DOMAIN
