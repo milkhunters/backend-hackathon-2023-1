@@ -74,7 +74,7 @@ class SessionManager:
             key=self.COOKIE_SESSION_KEY,
             secure=self._config.IS_SECURE_COOKIE,
             httponly=True,
-            samesite="strict",
+            samesite="Lax",
             path=self.COOKIE_PATH
         )
 
