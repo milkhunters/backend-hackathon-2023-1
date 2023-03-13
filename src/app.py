@@ -13,7 +13,6 @@ from src.config import load_consul_config
 from src.exceptions import APIError, handle_api_error, handle_404_error, handle_pydantic_error
 
 from src.router import reg_root_api_router
-from src.services.storage.s3 import S3Storage
 from src.utils import RedisClient, AiohttpClient
 
 config = load_consul_config(os.getenv('CONSUL_ROOT', "hackathon-2023-1-dev"), host="192.168.3.41")

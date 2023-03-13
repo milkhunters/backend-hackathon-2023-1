@@ -22,7 +22,7 @@ async def get_services(
     yield ServiceFactory(
         repos,
         current_user=scope.get("user"),
-        config=request.app.state.config,
+        config=app.state.config,
         redis_client=app.state.redis,
-        debug=request.app.state.config.DEBUG,
+        debug=app.state.config.DEBUG,
     )

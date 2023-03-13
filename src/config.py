@@ -1,3 +1,4 @@
+import os
 from functools import lru_cache
 from typing import Optional
 from dataclasses import dataclass
@@ -111,8 +112,8 @@ def load_consul_config(
         root_name=root_name
     )
     return Config(
-        DEBUG=bool(config('DEBUG')),
-        IS_SECURE_COOKIE=bool(config("IS_SECURE_COOKIE")),
+        DEBUG=bool(int(os.getenv("DEBUG", 1))),
+        IS_SECURE_COOKIE=bool(int(os.getenv("IS_SECURE_COOKIE", 1))),
         BASE=Base(
             TITLE=config("BASE", "TITLE"),
             DESCRIPTION=config("BASE", "DESCRIPTION"),
