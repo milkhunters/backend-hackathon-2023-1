@@ -1,3 +1,5 @@
+import os
+
 from fastapi import APIRouter
 from fastapi.requests import Request
 from fastapi import status as http_status
@@ -14,8 +16,8 @@ async def version(request: Request, details: bool = False):
     if details:
         info.update(
             {
-                "name": None,
-                "build": None,
+                "name": os.getenv("APP_NAME"),
+                "build": os.getenv("BUILD_COUNT"),
                 "build_date": None,
                 "branch": None,
                 "commit_hash": None,
