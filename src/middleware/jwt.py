@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from starlette.authentication import AuthCredentials, BaseUser
@@ -65,6 +66,7 @@ async def jwt_pre_process(
     """
     # Проверка авторизации
     if current_tokens:
+        logging.debug(f"Текущие токены: {current_tokens}")
         is_valid_access_token = jwt.is_valid_access_token(current_tokens.access_token)
         is_valid_refresh_token = jwt.is_valid_refresh_token(current_tokens.refresh_token)
         is_valid_session = False
@@ -104,11 +106,7 @@ async def jwt_pre_process(
         req_obj.scope["user"] = AuthenticatedUser(**payload.dict())
         req_obj.scope["auth"] = AuthCredentials(["authenticated"])
     else:
-        access_exp = None
-        if current_tokens and current_tokens.access_token:
-            access_exp = jwt.decode_access_token(current_tokens.access_token).exp
-
-        req_obj.scope["user"] = UnauthenticatedUser(exp=access_exp)
+        req_obj.scope["user"] = UnauthenticatedUser()
         req_obj.scope["auth"] = AuthCredentials()
 
 

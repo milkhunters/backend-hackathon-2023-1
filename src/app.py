@@ -16,9 +16,10 @@ from src.router import reg_root_api_router
 from src.utils import RedisClient, AiohttpClient
 
 config = load_consul_config(os.getenv('CONSUL_ROOT', "hackathon-2023-1-dev"), host="192.168.3.41")
-log = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG if config.DEBUG else logging.INFO)
 
-log.debug("Инициализация приложения FastAPI.")
+
+logging.debug("Инициализация приложения FastAPI.")
 app = FastAPI(
     title=config.BASE.TITLE,
     debug=config.DEBUG,
@@ -65,16 +66,16 @@ async def redis_pool(db: int = 0):
 
 @app.on_event("startup")
 async def on_startup():
-    log.debug("Executing FastAPI startup event handler.")
+    logging.debug("Executing FastAPI startup event handler.")
     await init_postgresql_db()
     app.state.redis = RedisClient(await redis_pool())
     app.state.http_client = AiohttpClient()
-    log.debug("FastAPI startup event handler executed.")
+    logging.debug("FastAPI startup event handler executed.")
 
 
 @app.on_event("shutdown")
 async def on_shutdown():
-    log.debug("Executing FastAPI shutdown event handler.")
+    logging.debug("Executing FastAPI shutdown event handler.")
     # Gracefully close utilities.
     await app.state.redis.close()
     await app.state.http_client.close_session()
@@ -107,11 +108,11 @@ def custom_openapi():
 app.openapi = custom_openapi
 app.state.config = config
 
-log.debug("Adding routers.")
+logging.debug("Adding routers.")
 app.include_router(reg_root_api_router(config.DEBUG))
-log.debug("Registering exception handlers.")
+logging.debug("Registering exception handlers.")
 app.add_exception_handler(APIError, handle_api_error)
 app.add_exception_handler(404, handle_404_error)
 app.add_exception_handler(RequestValidationError, handle_pydantic_error)
-log.debug("Registering middleware.")
+logging.debug("Registering middleware.")
 app.add_middleware(JWTMiddlewareHTTP)

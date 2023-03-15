@@ -55,7 +55,7 @@ class SessionManager:
             value=str(session_id),
             secure=self._config.IS_SECURE_COOKIE,
             httponly=True,
-            samesite="None",
+            samesite="none",
             max_age=self.COOKIE_EXP,
             path=self.COOKIE_PATH
         )
@@ -74,7 +74,7 @@ class SessionManager:
             key=self.COOKIE_SESSION_KEY,
             secure=self._config.IS_SECURE_COOKIE,
             httponly=True,
-            samesite="None",
+            samesite="none",
             path=self.COOKIE_PATH
         )
 
