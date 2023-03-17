@@ -31,7 +31,7 @@ class AuthApplicationService:
         self._debug = debug
 
     @filters(roles=[UserRole.ADMIN])
-    async def create_user(self, user: schemas.UserSignUp) -> uuid.UUID:
+    async def create_user(self, user: schemas.UserSignUp) -> None:
         """
         Создание нового пользователя
 
@@ -48,8 +48,7 @@ class AuthApplicationService:
 
         hashed_password = get_hashed_password(user.password)
 
-        user = await self._user_repo.create(**user.dict(exclude={"password"}), hashed_password=hashed_password)
-        return user.id
+        await self._user_repo.create(**user.dict(exclude={"password"}), hashed_password=hashed_password)
 
     @filters(roles=[UserRole.GUEST])
     async def authenticate(self, email: str, password: str, response: Response) -> schemas.User:

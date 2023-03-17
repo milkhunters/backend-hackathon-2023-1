@@ -14,7 +14,7 @@ class Chat(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     messages = relationship("models.tables.message.Message", back_populates="chat")
-    users = relationship("models.tables.user.User", back_populates="chats")
+    users = relationship("models.tables.user_chat.UserChatAssociation", back_populates="chat")
 
 
     def __repr__(self):
