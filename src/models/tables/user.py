@@ -3,6 +3,7 @@ import uuid
 from sqlalchemy import Column, String, Enum, DateTime, func, Text
 
 from sqlalchemy import UUID  # Only for psql
+from sqlalchemy.orm import relationship, Mapped
 
 from src.db import Base
 
@@ -15,9 +16,16 @@ class User(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String(255), unique=True, nullable=False)
-    username = Column(String(255), unique=True, nullable=False)
+    avatar_id = Column(UUID(as_uuid=True), nullable=True)
+    first_name = Column(String(64), nullable=False)
+    last_name = Column(String(64), nullable=False)
+    patronymic = Column(String(64), nullable=True)
+    department = Column(String(255), nullable=False)
+    job_title = Column(String(255), nullable=False)
     hashed_password = Column(String(255), nullable=False)
     role = Column(Enum(UserRole), default=UserRole.USER)
+    chats = relationship("models.tables.chat.Chat", back_populates="users")
+    messages = relationship("models.tables.message.Message", back_populates="owner")
 
     create_at = Column(DateTime(timezone=True), server_default=func.now())
     update_at = Column(DateTime(timezone=True), onupdate=func.now())
