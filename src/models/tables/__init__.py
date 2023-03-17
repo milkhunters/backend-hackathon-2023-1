@@ -5,4 +5,4 @@ from .user_chat import UserChatAssociation
 from .chat import Chat
 from .file import File
 from .banner import Banner
-from .message import Messages
+from .message import Message

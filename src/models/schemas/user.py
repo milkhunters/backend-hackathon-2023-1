@@ -58,9 +58,14 @@ class UserSmall(UserMiddle):
 
 
 class UserSignUp(BaseModel):
-    username: str
+    first_name: str
+    last_name: str
+    patronymic: str
     email: str
     password: str
+    department: str
+    job_title: str
+    role: Optional[UserRole]
 
     @validator('email')
     def email_must_be_valid(cls, value):

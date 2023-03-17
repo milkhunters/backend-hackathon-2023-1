@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 from src.db import Base
 
 
-class Messages(Base):
+class Message(Base):
     __tablename__ = "messages"
     __table_args__ = {'extend_existing': True}
 
