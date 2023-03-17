@@ -88,7 +88,7 @@ async def jwt_pre_process(
         if user:
             new_tokens = jwt.generate_tokens(
                 id=user.id,
-                username=user.username,
+                email=user.email,
                 role_value=user.role.value
             )
             # Для бесшовного обновления токенов:
@@ -218,9 +218,9 @@ class JWTMiddlewareHTTP(BaseHTTPMiddleware):
 
 
 class AuthenticatedUser(BaseUser):
-    def __init__(self, id: uuid.UUID, username: str, role_value: int, exp: int, **kwargs):
+    def __init__(self, id: uuid.UUID, email: str, role_value: int, exp: int, **kwargs):
         self._id = id
-        self._username = username
+        self._email = email
         self._role_value = role_value
         self._exp = exp
 
@@ -230,7 +230,7 @@ class AuthenticatedUser(BaseUser):
 
     @property
     def display_name(self) -> str:
-        return self.username
+        return self.email
 
     @property
     def identity(self) -> uuid.UUID:
@@ -241,8 +241,8 @@ class AuthenticatedUser(BaseUser):
         return self._id
 
     @property
-    def username(self) -> str:
-        return self.username
+    def email(self) -> str:
+        return self.email
 
     @property
     def role(self) -> UserRole:
@@ -259,7 +259,7 @@ class AuthenticatedUser(BaseUser):
         return hash(self._id)
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}(id={self._id}, username={self._username})>"
+        return f"<{self.__class__.__name__}(id={self._id}, email={self._email})>"
 
 
 class UnauthenticatedUser(BaseUser):
@@ -283,7 +283,7 @@ class UnauthenticatedUser(BaseUser):
         return None
 
     @property
-    def username(self) -> None:
+    def email(self) -> None:
         return None
 
     @property

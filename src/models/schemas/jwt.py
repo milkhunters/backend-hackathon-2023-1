@@ -10,6 +10,6 @@ class Tokens(BaseModel):
 
 class TokenPayload(BaseModel):
     id: str
-    username: str
+    email: str
     role_value: int
     exp: int
