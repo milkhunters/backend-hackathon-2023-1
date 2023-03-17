@@ -23,9 +23,15 @@ class User(BaseModel):
     Базовая схема пользователя
     """
     id: uuid.UUID
-    username: str
     email: str
+    avatar_id: uuid.UUID
+    first_name: str
+    last_name: str
+    patronymic: str
+    department: str
+    job_title: str
     role: UserRole
+
     create_at: datetime
     update_at: Optional[datetime]
 
@@ -33,13 +39,22 @@ class User(BaseModel):
         orm_mode = True
 
 
-class UserSmall(BaseModel):
+class UserMiddle(BaseModel):
     id: uuid.UUID
+    avatar_id: uuid.UUID
+    first_name: str
+    last_name: str
+    patronymic: str
+    department: str
+    job_title: str
     role: UserRole
-    username: str
 
     class Config:
         orm_mode = True
+
+
+class UserSmall(UserMiddle):
+    pass
 
 
 class UserSignUp(BaseModel):
@@ -61,16 +76,15 @@ class UserSignUp(BaseModel):
 
 
 class UserSignIn(BaseModel):
-    username: str
+    email: str
     password: str
 
 
 class UserUpdate(BaseModel):
-    username: Optional[str]
+    avatar_id: Optional[str]
 
 
-class UserUpdateAdminMode(BaseModel):
-    username: Optional[str]
+class UserUpdateByAdmin(BaseModel):
     email: Optional[str]
     role: Optional[UserRole]
 

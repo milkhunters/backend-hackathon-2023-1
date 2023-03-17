@@ -2,8 +2,6 @@ import uuid
 
 from fastapi import APIRouter, Depends
 from fastapi import status as http_status
-from fastapi.requests import Request
-from fastapi.responses import Response
 
 from src.dependencies.services import get_services
 from src.models import schemas
@@ -28,9 +26,3 @@ async def get_user(user_id: uuid.UUID, services: ServiceFactory = Depends(get_se
 @router.post("/update", response_model=None, status_code=http_status.HTTP_204_NO_CONTENT)
 async def update_user(data: schemas.UserUpdate, services: ServiceFactory = Depends(get_services)):
     await services.user.update_me(data)
-
-
-@router.delete("/delete", response_model=None, status_code=http_status.HTTP_204_NO_CONTENT)
-async def delete_user(request: Request, response: Response, services: ServiceFactory = Depends(get_services)):
-    await services.user.delete_me()
-    await services.auth.logout(request, response)  # TODO: разлогин через Redis

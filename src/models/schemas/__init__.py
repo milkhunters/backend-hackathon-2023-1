@@ -2,9 +2,10 @@ from .jwt import Tokens
 from .jwt import TokenPayload
 
 from .user import User
+from .user import UserMiddle
 from .user import UserSmall
 from .user import UserUpdate
-from .user import UserUpdateAdminMode
+from .user import UserUpdateByAdmin
 from .user import UserSignIn
 from .user import UserSignUp
 

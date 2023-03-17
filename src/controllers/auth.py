@@ -11,14 +11,9 @@ from src.views import UserBigResponse
 router = APIRouter()
 
 
-@router.put("/signUp", status_code=http_status.HTTP_201_CREATED)
-async def sign_up(user: schemas.UserSignUp, service: ServiceFactory = Depends(get_services)):
-    await service.auth.create_user(user)
-
-
 @router.post("/signIn", status_code=http_status.HTTP_200_OK, response_model=UserBigResponse)
 async def sign_in(user: schemas.UserSignIn, response: Response, service: ServiceFactory = Depends(get_services)):
-    return UserBigResponse(message=await service.auth.authenticate(user.username, user.password, response))
+    return UserBigResponse(message=await service.auth.authenticate(user.password, response))
 
 
 @router.post('/logout', status_code=http_status.HTTP_204_NO_CONTENT)

@@ -2,8 +2,8 @@ import uuid
 
 from sqlalchemy import Column, String, Enum, DateTime, func, Text
 
-from sqlalchemy import UUID  # Only for psql
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy import UUID
+from sqlalchemy.orm import relationship
 
 from src.db import Base
 
