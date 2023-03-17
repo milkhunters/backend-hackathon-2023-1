@@ -14,4 +14,5 @@ router = APIRouter()
 
 @router.get("/list", response_model=DialogListResponse, status_code=http_status.HTTP_200_OK)
 async def get_dialog_list(services: ServiceFactory = Depends(get_services)):
-    return list[DialogListResponse]
+    pass
+
