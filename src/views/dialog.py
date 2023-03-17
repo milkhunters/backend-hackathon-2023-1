@@ -1,6 +1,18 @@
-from src.models.schemas.dialog import Dialog
+import uuid
+
+from pydantic import BaseModel
+
+from src.models.enums import UserRole
 from src.views.base import BaseView
-from src.models.schemas import dialog
+
+
+class Dialog(BaseModel):
+    id: uuid.UUID
+    title: str
+    job_title: str
+    departament: str
+    avatar_id: str
+    role: UserRole
 
 
 class DialogListResponse(BaseView):
