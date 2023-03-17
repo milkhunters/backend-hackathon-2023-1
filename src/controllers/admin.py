@@ -26,6 +26,6 @@ async def update_user(
     await services.user.update_user(user_id, data)
 
 
-@router.put("/create_user", response_model=uuid.UUID, status_code=http_status.HTTP_201_CREATED)
+@router.put("/create_user", status_code=http_status.HTTP_201_CREATED)
 async def sign_up(user: schemas.UserSignUp, service: ServiceFactory = Depends(get_services)):
-    return await service.auth.create_user(user)
+    await service.auth.create_user(user)

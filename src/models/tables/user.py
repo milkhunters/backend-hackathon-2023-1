@@ -9,7 +9,6 @@ from src.db import Base
 
 from src.models.enums.role import UserRole
 
-
 class User(Base):
     __tablename__ = "users"
     __table_args__ = {'extend_existing': True}
@@ -24,7 +23,7 @@ class User(Base):
     job_title = Column(String(255), nullable=False)
     hashed_password = Column(String(255), nullable=False)
     role = Column(Enum(UserRole), default=UserRole.USER)
-    chats = relationship("models.tables.chat.Chat", back_populates="users")
+    chats = relationship("models.tables.user_chat.UserChatAssociation", back_populates="user")
     messages = relationship("models.tables.message.Message", back_populates="owner")
 
     create_at = Column(DateTime(timezone=True), server_default=func.now())
