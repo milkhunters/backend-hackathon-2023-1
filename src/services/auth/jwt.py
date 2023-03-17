@@ -12,8 +12,8 @@ from src.models import schemas
 
 class JWTManager:
     ALGORITHM = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES = 15  # 15 minutes
-    REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
+    ACCESS_TOKEN_EXPIRE_MINUTES = 2  # 2 minutes
+    REFRESH_TOKEN_EXPIRE_MINUTES = 60  # * 24 * 7  # 7 days
 
     COOKIE_EXP = 31536000
     COOKIE_PATH = "/api"
