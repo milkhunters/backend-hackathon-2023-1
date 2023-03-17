@@ -16,5 +16,6 @@ class Chat(Base):
     messages = relationship("models.tables.message.Message", back_populates="chat")
     users = relationship("models.tables.user.User", back_populates="chats")
 
+
     def __repr__(self):
         return f'<{self.__class__.__name__}: {self.id}>'
