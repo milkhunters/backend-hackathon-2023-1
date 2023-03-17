@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi.requests import Request
 from fastapi.responses import Response
 
@@ -28,8 +30,8 @@ class AuthApplicationService:
         self._current_user = current_user
         self._debug = debug
 
-    @filters(roles=[UserRole.GUEST])
-    async def create_user(self, user: schemas.UserSignUp) -> None:
+    @filters(roles=[UserRole.ADMIN])
+    async def create_user(self, user: schemas.UserSignUp) -> uuid.UUID:
         """
         Создание нового пользователя
 
@@ -38,25 +40,23 @@ class AuthApplicationService:
         :raise AccessDenied if user is already logged in
         :raise AlreadyExists Conflict if user already exists
 
-        :return: User
+        :return: id
         """
 
-        if await self._user_repo.get_by_username_insensitive(user.username):
-            raise AlreadyExists("User already exists")
-
         if await self._user_repo.get_by_email_insensitive(user.email):
-            raise AlreadyExists("User already exists")
+            raise AlreadyExists("Email уже существует")
 
         hashed_password = get_hashed_password(user.password)
 
-        await self._user_repo.create(**user.dict(exclude={"password"}), hashed_password=hashed_password)
+        user = await self._user_repo.create(**user.dict(exclude={"password"}), hashed_password=hashed_password)
+        return user.id
 
     @filters(roles=[UserRole.GUEST])
-    async def authenticate(self, username: str, password: str, response: Response) -> schemas.User:
+    async def authenticate(self, email: str, password: str, response: Response) -> schemas.User:
         """
         Аутентификация пользователя
 
-        :param username:
+        :param email:
         :param password:
         :param response:
 
@@ -67,20 +67,20 @@ class AuthApplicationService:
         :raise AccessDenied if user is banned
         """
 
-        user: tables.User = await self._user_repo.get_by_username_insensitive(username=username)
+        user: tables.User = await self._user_repo.get_by_email_insensitive(email=email)
         if not user:
-            raise NotFound("User not found")
+            raise NotFound("Пользователь не найден")
         if not verify_password(password, user.hashed_password):
-            raise NotFound("User not found")
+            raise NotFound("Пользователь не найден")
         if user.role == UserRole.BANNED:
-            raise AccessDenied("User is banned")
+            raise AccessDenied("Пользователь заблокирован")
         # генерация и установка токенов
         tokens = self._jwt.generate_tokens(user.id, user.username, user.role.value)
         self._jwt.set_jwt_cookie(response, tokens)
         await self._session.set_session_id(response, tokens.refresh_token)
         return schemas.User.from_orm(user)
 
-    @filters(roles=[UserRole.ADMIN, UserRole.USER])
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def logout(self, request: Request, response: Response) -> None:
         """
         Выход пользователя
@@ -93,7 +93,7 @@ class AuthApplicationService:
         if session_id:
             await self._session.delete_session_id(session_id, response)
 
-    @filters(roles=[UserRole.ADMIN, UserRole.USER])
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def refresh_tokens(self, request: Request, response: Response) -> None:
         """
         Обновление токенов
@@ -114,10 +114,10 @@ class AuthApplicationService:
 
         user = await self._user_repo.get(id=self._jwt.decode_refresh_token(current_tokens.refresh_token).id)
         if not user:
-            raise NotFound("User not found")
+            raise NotFound("Пользователь не найден")
 
         if user.role == UserRole.BANNED:
-            raise AccessDenied("User is banned")
+            raise AccessDenied("Пользователь заблокирован")
 
         new_tokens = self._jwt.generate_tokens(user.id, user.username, user.role.value)
         self._jwt.set_jwt_cookie(response, new_tokens)

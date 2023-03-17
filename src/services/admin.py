@@ -15,23 +15,5 @@ class AdminApplicationService:
         self._current_user = current_user
         self._debug = debug
 
-    @filters(roles=[UserRole.ADMIN])
-    async def get_user(self, user_id: uuid.UUID) -> schemas.User:
-        user = await self._repo.get(id=user_id)
 
-        if not user:
-            raise NotFound(f"User with id {user_id!r} not found")
 
-        return schemas.User.from_orm(user)
-
-    @filters(roles=[UserRole.ADMIN])
-    async def update_user(self, user_id: uuid.UUID, data: schemas.UserUpdateAdminMode) -> None:
-        user = await self._repo.get(id=user_id)
-
-        if not user:
-            raise NotFound(f"User with id {user_id!r} not found")
-
-        await self._repo.update(
-            id=user_id,
-            **data.dict(exclude_unset=True)
-        )

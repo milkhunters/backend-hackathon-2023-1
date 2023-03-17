@@ -6,4 +6,5 @@ class UserRole(int, Enum):
     GUEST = 1
     BANNED = 2
     USER = 3
-    ADMIN = 4
+    HIGH_USER = 4
+    ADMIN = 5

@@ -17,30 +17,49 @@ class UserApplicationService:
 
     @filters(roles=[UserRole.ADMIN, UserRole.USER])
     async def get_me(self) -> schemas.User:
-        """
-        Get UserBigResponse
-        """
         return schemas.User.from_orm(await self._repo.get(id=self._current_user.id))
 
-    @filters(roles=[UserRole.ADMIN, UserRole.USER])
-    async def get_user(self, user_id: uuid.UUID) -> schemas.UserSmall:
-        """
-        Get user by id # todo: by all fields
-        """
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
+    async def get_user(self, user_id: uuid.UUID) -> schemas.UserSmall | schemas.UserMiddle | schemas.User:
         user = await self._repo.get(id=user_id)
 
         if not user:
-            raise NotFound(f"User with id {user_id!r} not found")
+            raise NotFound(f"Пользователь с id {user_id!r} не найден!")
 
-        return schemas.UserSmall.from_orm(user)
+        if self._current_user.id == user_id:
+            return schemas.User.from_orm(user)
 
-    @filters(roles=[UserRole.ADMIN, UserRole.USER])
+        if self._current_user.role == UserRole.USER:
+            return schemas.UserSmall.from_orm(user)
+
+        if self._current_user.role == UserRole.HIGH_USER:
+            return schemas.UserMiddle.from_orm(user)
+
+        if self._current_user.role == UserRole.ADMIN:
+            return schemas.User.from_orm(user)
+
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def update_me(self, data: schemas.UserUpdate) -> None:
         await self._repo.update(
             id=self._current_user.id,
             **data.dict(exclude_unset=True)
         )
 
-    @filters(roles=[UserRole.ADMIN, UserRole.USER])
-    async def delete_me(self) -> None:
-        await self._repo.delete(id=self._current_user.id)
+    @filters(roles=[UserRole.ADMIN])
+    async def update_user(self, user_id: uuid.UUID, data: schemas.UserUpdateByAdmin) -> None:
+        user = await self._repo.get(id=user_id)
+
+        if not user:
+            raise NotFound(f"Пользователь с id {user_id!r} не найден!")
+
+        await self._repo.update(
+            id=user_id,
+            **data.dict(exclude_unset=True)
+        )
+
+    @filters(roles=[UserRole.ADMIN])
+    async def delete_user(self, user_id: uuid.UUID) -> None:
+        if self._current_user.id != uuid.UUID:
+            await self._repo.delete(id=user_id)
+        else:
+            raise AccessDenied("Вы не можете удалить самого себя")
