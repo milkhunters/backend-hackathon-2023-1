@@ -24,7 +24,7 @@ class User(BaseModel):
     """
     id: uuid.UUID
     email: str
-    avatar_id: uuid.UUID
+    avatar_id: Optional[uuid.UUID]
     first_name: str
     last_name: str
     patronymic: str
@@ -41,7 +41,7 @@ class User(BaseModel):
 
 class UserMiddle(BaseModel):
     id: uuid.UUID
-    avatar_id: uuid.UUID
+    avatar_id: Optional[uuid.UUID]
     first_name: str
     last_name: str
     patronymic: str

@@ -74,7 +74,7 @@ class AuthApplicationService:
         if user.role == UserRole.BANNED:
             raise AccessDenied("Пользователь заблокирован")
         # генерация и установка токенов
-        tokens = self._jwt.generate_tokens(user.id, user.username, user.role.value)
+        tokens = self._jwt.generate_tokens(user.id, user.email, user.role.value)
         self._jwt.set_jwt_cookie(response, tokens)
         await self._session.set_session_id(response, tokens.refresh_token)
         return schemas.User.from_orm(user)

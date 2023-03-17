@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.post("/signIn", status_code=http_status.HTTP_200_OK, response_model=UserBigResponse)
 async def sign_in(user: schemas.UserSignIn, response: Response, service: ServiceFactory = Depends(get_services)):
-    return UserBigResponse(message=await service.auth.authenticate(user.password, response))
+    return UserBigResponse(message=await service.auth.authenticate(user.email, user.password, response))
 
 
 @router.post('/logout', status_code=http_status.HTTP_204_NO_CONTENT)
