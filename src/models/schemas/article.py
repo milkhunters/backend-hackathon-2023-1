@@ -19,3 +19,7 @@ class Article(BaseModel):
 class ArticleDelete(Article):
     id: uuid.UUID
 
+
+class ArticleUpdate(BaseModel):
+    title: str
+    text: str

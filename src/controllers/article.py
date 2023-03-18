@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends
 from fastapi import status as http_status
 
@@ -8,8 +10,8 @@ from src.views.article import ArticleListResponse, CreateArticleResponse, Update
 router = APIRouter()
 
 
-@router.get("/list?count", response_model=ArticleListResponse, status_code=http_status.HTTP_200_OK)
-async def get_article_list(count: int, services: ServiceFactory = Depends(get_services)):
+@router.get("/list", response_model=ArticleListResponse, status_code=http_status.HTTP_200_OK)
+async def get_article_list(count: Optional[int], services: ServiceFactory = Depends(get_services)):
     pass
 
 

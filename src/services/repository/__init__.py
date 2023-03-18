@@ -1,4 +1,5 @@
 from .user import UserRepo
+from .article import ArticleRepo
 
 
 class RepoFactory:
