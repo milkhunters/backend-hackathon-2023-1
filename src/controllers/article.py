@@ -24,16 +24,16 @@ async def get_article_list_range(count: int, services: ServiceFactory = Depends(
 
 
 @router.post("/list/admin/create", response_model=CreateArticleResponse, status_code=http_status.HTTP_200_OK)
-async def create_article(article: schemas.Article, services: ServiceFactory = Depends(get_services) ):
+async def create_article(article: schemas.Article, services: ServiceFactory = Depends(get_services)):
     return CreateArticleResponse(message=await services.article.create_article(article))
 
-
-
+"""
 @router.put("/list/admin/update", response_model=UpdateArticleResponse, status_code=http_status.HTTP_204_NO_CONTENT)
 async def update_article(services: ServiceFactory = Depends(get_services)):
-    pass
+    return UpdateArticleResponse(message=await services.article.update_article())
 
 
 @router.delete("/list/admin/delete", response_model=DeleteArticleResponse, status_code=http_status.HTTP_204_NO_CONTENT)
 async def delete_article(services: ServiceFactory = Depends(get_services)):
     pass
+"""
