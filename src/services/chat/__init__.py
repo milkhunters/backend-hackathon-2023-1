@@ -147,7 +147,7 @@ class ChatApplicationService:
                     files.append(
                         schemas.MessageFileInclusion(
                             title=file.file_name,
-                            file_id=file.id
+                            file_id=str(file.id)
                         )
                     )
                 owner = await self._user_repo.get(id=self._current_user.id)
@@ -155,8 +155,8 @@ class ChatApplicationService:
             output_data = views.MessageOutput(
                 id=str(message_id),
                 text=input_data.text,
-                avatar_id=owner.avatar_id,
-                owner_id=owner.id,
+                avatar_id=str(owner.avatar_id) if owner.avatar_id else None,
+                owner_id=str(owner.id),
                 first_name=owner.first_name,
                 last_name=owner.last_name,
                 patronymic=owner.patronymic,

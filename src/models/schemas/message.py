@@ -26,7 +26,7 @@ class Message(BaseModel):
 
 class MessageFileInclusion(BaseModel):
     title: str
-    file_id: uuid.UUID
+    file_id: str
 
 
 class MessageInput(BaseModel):
