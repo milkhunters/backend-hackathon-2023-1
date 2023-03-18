@@ -12,7 +12,7 @@ from src.views.banner import BannerResponse
 router = APIRouter()
 
 
-@router.post("/list", status_code=http_status.HTTP_200_OK, response_model=BannerResponse)
+@router.get("/list", status_code=http_status.HTTP_200_OK, response_model=BannerResponse)
 async def banner_list(service: ServiceFactory = Depends(get_services)):
     return BannerResponse(message=await service.banner.get_banners())
 
