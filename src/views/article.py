@@ -6,6 +6,10 @@ class ArticleListResponse(BaseView):
     message: list[Article]
 
 
+class ArticleResponse(BaseView):
+    message: Article
+
+
 class CreateArticleResponse(BaseView):
     message: Article
 

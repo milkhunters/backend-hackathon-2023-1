@@ -31,3 +31,7 @@ class RepoFactory:
     @property
     def file(self) -> FileRepo:
         return FileRepo(self._session)
+
+    @property
+    def article(self) -> ArticleRepo:
+        return ArticleRepo(self._session)
