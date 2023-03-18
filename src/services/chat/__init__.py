@@ -1,3 +1,4 @@
+import json
 import uuid
 from typing import Optional
 
@@ -111,10 +112,10 @@ class ChatApplicationService:
 
         ws = self._chat_manager.get_room_ws(room_id=chat_id)
         while websocket.client_state == WebSocketState.CONNECTED:
-            response = await ws.receive_json(websocket)
+            response = await ws.receive_text(websocket)
 
             try:
-                input_data = schemas.MessageInput(**response)
+                input_data = schemas.MessageInput(**json.loads(response))
             except ValueError:
                 raise BadRequest("Словарь должен соответствовать принимаемой модели")
 
