@@ -6,11 +6,19 @@ from pydantic import BaseModel
 
 
 class Article(BaseModel):
+    id: uuid.UUID
     title: str
     text: str
+    create_at: datetime
+    update_at: Optional[datetime]
 
     class Config:
         orm_mode = True
+
+
+class CreateArticle(BaseModel):
+    title: str
+    text: str
 
 
 class ArticleDelete(Article):

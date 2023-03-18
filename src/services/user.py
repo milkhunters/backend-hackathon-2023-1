@@ -1,7 +1,7 @@
 import uuid
 from typing import Optional
 
-from src.exceptions import AccessDenied, NotFound
+from src.exceptions import AccessDenied, NotFound, BadRequest
 from src.models import tables, schemas
 from src.models.enums.role import UserRole
 from src.models.schemas.user import is_valid_password
@@ -67,8 +67,11 @@ class UserApplicationService:
             raise AccessDenied("Вы не можете удалить самого себя")
 
     @filters(roles=[UserRole.ADMIN, UserRole.USER, UserRole.HIGH_USER])
-    async def user_password_update_by_user(self, new_password: schemas.UserPasswordUpdate):
-        user = await self._repo.get(id=self._current_user.id)
+    async def user_password_update_by_user(self, old_password: str, new_password: schemas.UserPasswordUpdate):
+        user = self._current_user
+        if not verify_password(old_password, storage=user.hashed_password):
+            raise BadRequest("Некорректный старый пароль!")
+
         hashed_password = get_hashed_password(new_password.password)
         await self._repo.update(
             id=self._current_user.id,
@@ -82,7 +85,7 @@ class UserApplicationService:
             raise NotFound(f"Пользователь с id {user.id!r} не найден!")
 
         if verify_password(data.password, storage=user.hashed_password):
-            raise ValueError("Новый и старый пароль совпадают!")
+            raise BadRequest("Новый и старый пароль совпадают!")
 
         hashed_password = get_hashed_password(data.password)
 
