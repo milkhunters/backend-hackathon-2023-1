@@ -9,6 +9,10 @@ from .user import UserUpdateByAdmin
 from .user import UserSignIn
 from .user import UserSignUp
 
+
+from .message import MessageInput
+from .message import MessageFileInclusion
+
 from .article import Article
 from .article import ArticleUpdate
 from .article import ArticleDelete

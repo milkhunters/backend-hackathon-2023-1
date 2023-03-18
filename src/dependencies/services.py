@@ -1,6 +1,6 @@
 from fastapi import Depends
 from fastapi.requests import Request
-from starlette.websockets import WebSocket
+from fastapi.websockets import WebSocket
 
 from src.dependencies.repos import get_repos
 from src.services import ServiceFactory
@@ -24,5 +24,6 @@ async def get_services(
         current_user=scope.get("user"),
         config=app.state.config,
         redis_client=app.state.redis,
+        chat_manager=app.state.chat_manager,
         debug=app.state.config.DEBUG,
     )

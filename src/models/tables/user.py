@@ -9,6 +9,7 @@ from src.db import Base
 
 from src.models.enums.role import UserRole
 
+
 class User(Base):
     __tablename__ = "users"
     __table_args__ = {'extend_existing': True}

@@ -14,6 +14,3 @@ class AdminApplicationService:
         self._repo = user_repo
         self._current_user = current_user
         self._debug = debug
-
-
-

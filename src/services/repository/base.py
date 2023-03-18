@@ -1,3 +1,4 @@
+import uuid
 from typing import Generic, Type, TypeVar, Optional
 
 from sqlalchemy import insert, update, delete, func, select
@@ -12,7 +13,7 @@ class BaseRepository(Generic[T]):
     def __init__(self, conn: AsyncSession):
         self._conn = conn
 
-    async def create(self, **kwargs) -> T:
+    async def create(self, **kwargs) -> uuid.UUID:
         """
         Создает запись в БД
 
@@ -21,7 +22,7 @@ class BaseRepository(Generic[T]):
         """
         data = await self._conn.execute(insert(self.table).values(**kwargs))
         await self._conn.commit()
-        return data
+        return data.inserted_primary_key[0] # todo: normalize it
 
     async def get(self, **kwargs) -> Optional[T]:
         """
@@ -72,3 +73,7 @@ class BaseRepository(Generic[T]):
         :return:
         """
         return (await self._conn.execute(select(func.count()).where(**kwargs))).scalar()
+
+    @property
+    def session(self):
+        return self._conn
