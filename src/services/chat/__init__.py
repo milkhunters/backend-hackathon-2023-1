@@ -149,15 +149,16 @@ class ChatApplicationService:
                             file_id=file.id
                         )
                     )
+                    owner = await self._user_repo.get(id=self._current_user.id)
 
             output_data = views.MessageOutput(
                 id=message_id,
                 text=input_data.text,
-                avatar_id=self._current_user.avatar_id,
-                owner_id=self._current_user.id,
-                first_name=self._current_user.first_name,
-                last_name=self._current_user.last_name,
-                patronymic=self._current_user.patronymic,
+                avatar_id=owner.avatar_id,
+                owner_id=owner.id,
+                first_name=owner.first_name,
+                last_name=owner.last_name,
+                patronymic=owner.patronymic,
                 files=files,
                 is_read=message_obj.is_read,
                 create_at=message_obj.create_at,
