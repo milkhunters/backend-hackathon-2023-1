@@ -8,7 +8,7 @@ from fastapi.openapi.utils import get_openapi
 
 from src.models import tables
 from src.db import create_psql_async_session
-from src.middleware import JWTMiddlewareHTTP
+from src.middleware import JWTMiddlewareHTTP, JWTMiddlewareWS
 from src.config import load_consul_config
 from src.exceptions import APIError, handle_api_error, handle_404_error, handle_pydantic_error
 
@@ -133,3 +133,4 @@ app.add_exception_handler(404, handle_404_error)
 app.add_exception_handler(RequestValidationError, handle_pydantic_error)
 logging.debug("Registering middleware.")
 app.add_middleware(JWTMiddlewareHTTP)
+app.add_middleware(JWTMiddlewareWS)

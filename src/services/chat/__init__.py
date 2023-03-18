@@ -35,9 +35,13 @@ class ChatApplicationService:
         self._message_repo = message_repo
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
+    async def get_unread_msg_count(self) -> int:
+        pass
+
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_my_dialogs(self) -> list[views.DialogItem]:
-        _ = await self._user_chat_repo.get_all(user_id=self._current_user.id)
-        chat_ids = [obj.chat_id for obj in _]
+        dialogs = await self._user_chat_repo.get__info(self._current_user.id)
+        pass
 
         # dialogs = list()
         # for chat_id in chat_ids:
@@ -49,6 +53,7 @@ class ChatApplicationService:
         #             departament=companion.department,
         #             avatar_id=companion.avatar_id,
         #             message_count=await self._message_repo.count(chat_id=chat_id),
+        #             unread_count=0,
         #             role=companion.role
         #         )
         #     )
@@ -82,6 +87,7 @@ class ChatApplicationService:
             departament=companion.department,
             avatar_id=companion.avatar_id,
             message_count=await self._message_repo.count(chat_id=chat_id),
+            unread_count=await self._message_repo.count(chat_id=chat_id, is_read=False),
             role=companion.role
         )
 
@@ -153,6 +159,7 @@ class ChatApplicationService:
                 last_name=self._current_user.last_name,
                 patronymic=self._current_user.patronymic,
                 files=files,
+                is_read=message_obj.is_read,
                 create_at=message_obj.create_at,
                 update_at=message_obj.update_at
             )

@@ -34,3 +34,8 @@ class UserChatAssociationRepo(BaseRepository[tables.UserChatAssociation]):
             where(and_(self.table.chat_id.in_(
             select(self.table.chat_id).filter_by(user_id=user_id)),
             tables.User.id != user_id))
+
+        result = await self.session.execute(request)
+        rows = result.all()
+        pass
+
