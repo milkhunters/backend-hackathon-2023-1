@@ -8,5 +8,5 @@ from src.models import tables
 from src.services.repository.base import BaseRepository
 
 
-class ChatRepo(BaseRepository[tables.Chat]):
-    table = tables.Chat
+class MessageRepo(BaseRepository[tables.Message]):
+    table = tables.Message

@@ -15,12 +15,11 @@ class ChatManager:
         assert room_id in self._rooms
         await self._rooms[room_id]['ws'].connect(websocket)
 
-    async def disconnect(self, websocket: WebSocket, room_id: int) -> None:
+    async def disconnect(self, websocket: WebSocket, room_id: uuid.UUID) -> None:
         ws: WSJWTConnectionManager = await self._rooms[room_id]['ws']
         await ws.disconnect(websocket)
         if ws.connections == 0:
             self._rooms.pop(room_id)
-
 
     async def create_room(self, room_id) -> None:
         assert room_id not in self._rooms

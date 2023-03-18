@@ -16,7 +16,7 @@ class File(Base):
     file_name = Column(String(255), default="file")
     file_id = Column(UUID(as_uuid=True))
 
-    message_id = Column(UUID(as_uuid=True), ForeignKey("messages.id"), nullable=False)
+    message_id = Column(UUID(as_uuid=True), ForeignKey("messages.id"), nullable=True)
     message = relationship("models.tables.message.Message", back_populates="files")
 
     def __repr__(self):

@@ -46,7 +46,7 @@ class WSConnectionManager:
         except (WebSocketDisconnect, RuntimeError):
             await self.disconnect(websocket)
 
-    async def receive_json(self, websocket: WebSocket) -> str:
+    async def receive_json(self, websocket: WebSocket) -> dict:
         try:
             return await websocket.receive_json(mode="text")
         except (WebSocketDisconnect, RuntimeError):
