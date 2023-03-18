@@ -15,7 +15,7 @@ class MessageOutput(BaseModel):
     first_name: str
     last_name: str
     patronymic: Optional[str]
-
+    is_read: bool
     files: list[MessageFileInclusion]
 
     create_at: datetime

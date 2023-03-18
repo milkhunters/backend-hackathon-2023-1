@@ -14,6 +14,7 @@ class DialogItem(BaseModel):
     departament: str
     avatar_id: Optional[str]
     message_count: int
+    unread_count: int
     role: UserRole
 
 
