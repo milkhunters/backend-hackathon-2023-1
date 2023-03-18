@@ -1,10 +1,10 @@
 from src.models import tables
 from . import repository
 from . import auth
-from .admin import AdminApplicationService
 from .chat import ChatApplicationService
 from .file import FileApplicationService
 from .user import UserApplicationService
+from .article import ArticleApplicationService
 
 
 class ServiceFactory:
@@ -58,3 +58,7 @@ class ServiceFactory:
             file_storage=self._file_storage,
             current_user=self._current_user
         )
+
+    @property
+    def article(self) -> ArticleApplicationService:
+        return ArticleApplicationService(self._repo.article, current_user=self._current_user)

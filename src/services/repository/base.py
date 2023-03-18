@@ -22,7 +22,7 @@ class BaseRepository(Generic[T]):
         """
         data = await self._conn.execute(insert(self.table).values(**kwargs))
         await self._conn.commit()
-        return data.inserted_primary_key[0] # todo: normalize it
+        return data.inserted_primary_key[0]  # todo: normalize it
 
     async def get(self, **kwargs) -> Optional[T]:
         """
@@ -42,6 +42,9 @@ class BaseRepository(Generic[T]):
         :return:
         """
         return (await self._conn.execute(select(self.table).filter_by(**kwargs).limit(100))).scalars().all()
+
+    async def get_range(self, count: int, **kwargs):
+        return (await self._conn.execute(select(self.table).filter_by(**kwargs).limit(count))).scalars().all()
 
     async def update(self, id: any, **kwargs) -> None:
         """

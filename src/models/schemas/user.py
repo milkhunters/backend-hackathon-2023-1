@@ -89,6 +89,20 @@ class UserUpdate(BaseModel):
     avatar_id: Optional[str]
 
 
+class UserUpdatePasswordByAdmin(BaseModel):
+    id: uuid.UUID
+    password: str
+
+
+class UserPasswordUpdate(BaseModel):
+    password: str
+
+    @validator('password')
+    def password_must_be_valid(cls, value):
+        if not (is_valid_password(value)):
+            raise ValueError("Слабый или невалидный password!")
+
+
 class UserUpdateByAdmin(BaseModel):
     email: Optional[str]
     role: Optional[UserRole]
