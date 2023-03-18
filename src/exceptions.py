@@ -2,6 +2,7 @@ import typing
 from fastapi.exceptions import HTTPException as StarletteHTTPException
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
+from starlette.websockets import WebSocket
 
 from src.models.enums import ErrorType
 from src.models.schemas import Error, FieldErrorItem
@@ -41,19 +42,23 @@ class AlreadyExists(APIError):
 
 
 async def handle_api_error(request, exc):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content=BaseView(
-            error=Error(
-                type=ErrorType.MESSAGE,
-                content=exc.message
-            )
-        ).dict()
-    )
+    if isinstance(request, WebSocket):
+        await request.accept()
+        await request.close(code=int(f'{exc.status_code}0'), reason=exc.message)
+        return
+    else:
+        return JSONResponse(
+            status_code=exc.status_code,
+            content=BaseView(
+                error=Error(
+                    type=ErrorType.MESSAGE,
+                    content=exc.message
+                )
+            ).dict()
+        )
 
 
 async def handle_pydantic_error(request, exc: ValidationError):
-    some = exc.errors()
     return JSONResponse(
         status_code=400,
         content=BaseView(
@@ -73,12 +78,17 @@ async def handle_pydantic_error(request, exc: ValidationError):
 
 
 async def handle_404_error(request, exc):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content=BaseView(
-            error=Error(
-                type=ErrorType.MESSAGE,
-                content='Not Found'
-            )
-        ).dict()
-    )
+    if isinstance(request, WebSocket):
+        await request.accept()
+        await request.close(code=int(f'{exc.status_code}0'), reason=exc.message)
+        return
+    else:
+        return JSONResponse(
+            status_code=exc.status_code,
+            content=BaseView(
+                error=Error(
+                    type=ErrorType.MESSAGE,
+                    content='Not Found'
+                )
+            ).dict()
+        )
