@@ -9,5 +9,8 @@ from .user import UserUpdateByAdmin
 from .user import UserSignIn
 from .user import UserSignUp
 
+from .message import MessageInput
+from .message import MessageInclusion
+
 from .error import Error
 from .error import FieldErrorItem

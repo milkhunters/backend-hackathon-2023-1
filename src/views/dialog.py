@@ -6,7 +6,7 @@ from src.models.enums import UserRole
 from src.views.base import BaseView
 
 
-class Dialog(BaseModel):
+class DialogResponse(BaseModel):
     id: uuid.UUID
     title: str
     job_title: str
@@ -16,4 +16,4 @@ class Dialog(BaseModel):
 
 
 class DialogListResponse(BaseView):
-    message: list[Dialog]
+    message: list[DialogResponse]
