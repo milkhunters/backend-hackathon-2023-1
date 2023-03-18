@@ -90,15 +90,17 @@ class UserUpdate(BaseModel):
     avatar_id: Optional[str]
 
 
+class UserUpdatePasswordByAdmin(BaseModel):
+    id: uuid.UUID
+    password: str
+
+
 class UserPasswordUpdate(BaseModel):
     password: str
 
     @validator('password')
     def password_must_be_valid(cls, value):
-        if verify_password(value, storage=user.hashed_password):
-            raise ValueError("Новый и старый пароль совпадают!")
-
-        if not (is_valid_password(value )):
+        if not (is_valid_password(value)):
             raise ValueError("Слабый или невалидный password!")
 
 

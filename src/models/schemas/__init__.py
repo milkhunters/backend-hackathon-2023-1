@@ -1,7 +1,6 @@
 from .jwt import Tokens
 from .jwt import TokenPayload
 
-from .admin import UserUpdatePasswordByAdmin
 
 from .user import User
 from .user import UserMiddle
@@ -11,6 +10,11 @@ from .user import UserUpdateByAdmin
 from .user import UserSignIn
 from .user import UserSignUp
 from .user import UserPasswordUpdate
+from .user import UserUpdatePasswordByAdmin
+
+
+from .message import MessageInput
+from .message import MessageFileInclusion
 
 from .article import Article
 from .article import ArticleUpdate

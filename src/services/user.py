@@ -74,3 +74,19 @@ class UserApplicationService:
             id=self._current_user.id,
             hashed_password=hashed_password
         )
+
+    @filters(roles=[UserRole.ADMIN])
+    async def user_password_update_by_admin(self, data: schemas.UserUpdatePasswordByAdmin):
+        user = await self._repo.get(id=data.id)
+        if not user:
+            raise NotFound(f"Пользователь с id {user.id!r} не найден!")
+
+        if verify_password(data.password, storage=user.hashed_password):
+            raise ValueError("Новый и старый пароль совпадают!")
+
+        hashed_password = get_hashed_password(data.password)
+
+        await self._repo.update(
+            id=user.id,
+            hashed_password=hashed_password
+        )

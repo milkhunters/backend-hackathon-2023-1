@@ -20,6 +20,11 @@ class APIError(StarletteHTTPException):
         super().__init__(status_code=status_code, headers=headers)
 
 
+class BadRequest(APIError):
+    def __init__(self, message: str = "Bad request") -> None:
+        super().__init__(message=message, status_code=400)
+
+
 class AccessDenied(APIError):
     def __init__(self, message: str = "Access denied") -> None:
         super().__init__(message=message, status_code=403)
