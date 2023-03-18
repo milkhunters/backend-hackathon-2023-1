@@ -47,3 +47,7 @@ class ServiceFactory:
             chat_manager=self._chat_manager,
             current_user=self._current_user
         )
+
+    @property
+    def article(self) -> ArticleApplicationService:
+        return ArticleApplicationService(self._repo.article, current_user=self._current_user)
