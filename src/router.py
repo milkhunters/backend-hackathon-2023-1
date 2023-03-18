@@ -7,6 +7,7 @@ from src.controllers import stats
 from src.controllers import dialog
 from src.controllers import article
 from src.controllers import file
+from src.controllers import banner
 
 
 def reg_root_api_router(is_debug: bool) -> APIRouter:
@@ -19,5 +20,6 @@ def reg_root_api_router(is_debug: bool) -> APIRouter:
     root_api_router.include_router(dialog.router, prefix="/dialog", tags=["Chat"])
     root_api_router.include_router(article.router, prefix="/article", tags=["Articles"])
     root_api_router.include_router(file.router, prefix="/file", tags=["Files"])
+    root_api_router.include_router(banner.router, prefix="/banner", tags=["Banners"])
 
     return root_api_router

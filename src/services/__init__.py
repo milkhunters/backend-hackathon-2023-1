@@ -1,6 +1,7 @@
 from src.models import tables
 from . import repository
 from . import auth
+from .banner import BannerApplicationService
 from .chat import ChatApplicationService
 from .file import FileApplicationService
 from .user import UserApplicationService
@@ -62,3 +63,7 @@ class ServiceFactory:
     @property
     def article(self) -> ArticleApplicationService:
         return ArticleApplicationService(self._repo.article, current_user=self._current_user)
+
+    @property
+    def banner(self) -> BannerApplicationService:
+        return BannerApplicationService(banner_repo=self._repo.banner, current_user=self._current_user)
