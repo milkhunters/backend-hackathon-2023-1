@@ -2,17 +2,9 @@ from sqlalchemy.orm import relationship
 
 from src.db import Base
 
-from sqlalchemy import Table
 from sqlalchemy import Column, ForeignKey
 
 from sqlalchemy import UUID
-
-# association_table = Table(
-#     "user_chat",
-#     Base.metadata,
-#     Column("user_id", UUID(as_uuid=True), ForeignKey("users.id"), nullable=False),
-#     Column("chat_id", UUID(as_uuid=True), ForeignKey("chats.id"), nullable=False)
-# )
 
 
 class UserChatAssociation(Base):

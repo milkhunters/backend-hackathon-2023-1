@@ -25,5 +25,6 @@ async def get_services(
         config=app.state.config,
         redis_client=app.state.redis,
         chat_manager=app.state.chat_manager,
+        file_storage=app.state.file_storage,
         debug=app.state.config.DEBUG,
     )
