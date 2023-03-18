@@ -10,7 +10,7 @@ from .user import UserSignIn
 from .user import UserSignUp
 
 from .message import MessageInput
-from .message import MessageInclusion
+from .message import MessageFileInclusion
 
 from .error import Error
 from .error import FieldErrorItem
