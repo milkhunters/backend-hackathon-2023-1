@@ -18,6 +18,7 @@ from .message import MessageFileInclusion
 from .article import Article
 from .article import ArticleUpdate
 from .article import ArticleDelete
+from .article import CreateArticle
 
 from .error import Error
 from .error import FieldErrorItem
