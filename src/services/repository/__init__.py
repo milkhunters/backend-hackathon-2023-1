@@ -2,7 +2,9 @@ from .chat import ChatRepo
 from .file import FileRepo
 from .message import MessageRepo
 from .user import UserRepo
+
 from .user_chat import UserChatAssociationRepo
+from .article import ArticleRepo
 
 
 class RepoFactory:
