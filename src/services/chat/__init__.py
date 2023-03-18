@@ -153,7 +153,7 @@ class ChatApplicationService:
                 owner = await self._user_repo.get(id=self._current_user.id)
 
             output_data = views.MessageOutput(
-                id=message_id,
+                id=str(message_id),
                 text=input_data.text,
                 avatar_id=owner.avatar_id,
                 owner_id=owner.id,
