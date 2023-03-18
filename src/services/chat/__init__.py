@@ -150,7 +150,7 @@ class ChatApplicationService:
                             file_id=file.id
                         )
                     )
-                    owner = await self._user_repo.get(id=self._current_user.id)
+                owner = await self._user_repo.get(id=self._current_user.id)
 
             output_data = views.MessageOutput(
                 id=message_id,
