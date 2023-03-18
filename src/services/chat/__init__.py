@@ -39,21 +39,21 @@ class ChatApplicationService:
         _ = await self._user_chat_repo.get_all(user_id=self._current_user.id)
         chat_ids = [obj.chat_id for obj in _]
 
-        dialogs = list()
-        for chat_id in chat_ids:
-            dialogs.append(
-                views.DialogItem(
-                    id=chat_id,
-                    title=f"{companion.first_name} {companion.last_name} {companion.patronymic}",
-                    job_title=companion.job_title,
-                    departament=companion.department,
-                    avatar_id=companion.avatar_id,
-                    message_count=await self._message_repo.count(chat_id=chat_id),
-                    role=companion.role
-                )
-            )
+        # dialogs = list()
+        # for chat_id in chat_ids:
+        #     dialogs.append(
+        #         views.DialogItem(
+        #             id=chat_id,
+        #             title=f"{companion.first_name} {companion.last_name} {companion.patronymic}",
+        #             job_title=companion.job_title,
+        #             departament=companion.department,
+        #             avatar_id=companion.avatar_id,
+        #             message_count=await self._message_repo.count(chat_id=chat_id),
+        #             role=companion.role
+        #         )
+        #     )
 
-        return dialogs
+        # return dialogs
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_dialog_by_user(self, user_id: uuid.UUID) -> views.DialogItem:
