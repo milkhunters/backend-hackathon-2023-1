@@ -4,6 +4,8 @@ from typing import Optional
 from src.exceptions import AccessDenied, NotFound
 from src.models import tables, schemas
 from src.models.enums.role import UserRole
+from src.models.schemas.user import is_valid_password
+from src.services.auth import get_hashed_password, verify_password
 from src.services.auth.utils import filters
 from src.services.repository import UserRepo
 
@@ -63,3 +65,12 @@ class UserApplicationService:
             await self._repo.delete(id=user_id)
         else:
             raise AccessDenied("Вы не можете удалить самого себя")
+
+    @filters(roles=[UserRole.ADMIN, UserRole.USER, UserRole.HIGH_USER])
+    async def user_password_update_by_user(self, new_password: schemas.UserPasswordUpdate):
+        user = await self._repo.get(id=self._current_user.id)
+        hashed_password = get_hashed_password(new_password.password)
+        await self._repo.update(
+            id=self._current_user.id,
+            hashed_password=hashed_password
+        )

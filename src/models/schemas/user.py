@@ -6,6 +6,7 @@ from typing import Optional
 from pydantic import BaseModel, validator
 
 from src.models.enums.role import UserRole
+from src.services.auth import verify_password
 
 
 def is_valid_email(email: str) -> bool:
@@ -87,6 +88,18 @@ class UserSignIn(BaseModel):
 
 class UserUpdate(BaseModel):
     avatar_id: Optional[str]
+
+
+class UserPasswordUpdate(BaseModel):
+    password: str
+
+    @validator('password')
+    def password_must_be_valid(cls, value):
+        if verify_password(value, storage=user.hashed_password):
+            raise ValueError("Новый и старый пароль совпадают!")
+
+        if not (is_valid_password(value )):
+            raise ValueError("Слабый или невалидный password!")
 
 
 class UserUpdateByAdmin(BaseModel):

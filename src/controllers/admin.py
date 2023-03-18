@@ -7,7 +7,6 @@ from src.dependencies.services import get_services
 from src.models import schemas
 from src.services import ServiceFactory
 
-from src.views.user import UserBigResponse
 
 router = APIRouter()
 
@@ -29,3 +28,8 @@ async def update_user(
 @router.put("/create_user", status_code=http_status.HTTP_201_CREATED)
 async def sign_up(user: schemas.UserSignUp, service: ServiceFactory = Depends(get_services)):
     await service.auth.create_user(user)
+
+
+@router.put("/update_user_password", response_model=None, status_code=http_status.HTTP_204_NO_CONTENT)
+async def update_user_password(data: schemas.UserUpdatePasswordByAdmin, service: ServiceFactory = Depends(get_services)):
+    await service.admin.user_password_update_by_admin(data)

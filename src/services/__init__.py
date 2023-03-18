@@ -3,6 +3,7 @@ from . import repository
 from . import auth
 from .admin import AdminApplicationService
 from .user import UserApplicationService
+from .article import ArticleApplicationService
 
 
 class ServiceFactory:
