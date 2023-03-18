@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 from fastapi.requests import Request
 from fastapi.responses import Response
 from fastapi import status as http_status
+from starlette.websockets import WebSocket
 
 from src.dependencies.services import get_services
 from src.models import schemas
@@ -22,3 +23,8 @@ async def get_dialog_list(services: ServiceFactory = Depends(get_services)):
 @router.get("/open", response_model=DialogResponse, status_code=http_status.HTTP_200_OK)
 async def open_dialog(user_id: uuid.UUID, services: ServiceFactory = Depends(get_services)):
     return DialogResponse(message=await services.chat.get_dialog_by_user(user_id))
+
+
+@router.websocket("/{dialog_id}/ws")
+async def open_dialog(dialog_id: uuid.UUID, websocket: WebSocket, services: ServiceFactory = Depends(get_services)):
+    await services.chat.subscribe_to_chat(websocket, dialog_id)
