@@ -97,7 +97,7 @@ class ChatApplicationService:
         chat_companions = await self._user_chat_repo.get_all(chat_id=chat_id)
         is_found = False
         for companion in chat_companions:
-            if self._current_user.id == companion.user_id:
+            if str(self._current_user.id) == str(companion.user_id):
                 is_found = True
 
         if not is_found:
