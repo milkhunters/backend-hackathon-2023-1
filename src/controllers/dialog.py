@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.get("/list", response_model=DialogListResponse, status_code=http_status.HTTP_200_OK)
 async def get_dialog_list(services: ServiceFactory = Depends(get_services)):
-    pass
+    return DialogListResponse(message=await services.chat.get_my_dialogs())
 
 
 @router.get("/open", response_model=DialogResponse, status_code=http_status.HTTP_200_OK)

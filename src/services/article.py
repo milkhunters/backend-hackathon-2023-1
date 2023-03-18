@@ -12,7 +12,7 @@ from src.services.repository import ArticleRepo
 
 class ArticleApplicationService:
 
-    def __int__(self, article_repo: ArticleRepo, *, current_user: Optional[tables.User], debug: bool = False):
+    def __init__(self, article_repo: ArticleRepo, *, current_user: Optional[tables.User], debug: bool = False):
         self._article_repo = article_repo
         self._current_user = current_user
         self._debug = debug

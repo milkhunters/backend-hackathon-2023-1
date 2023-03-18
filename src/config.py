@@ -26,9 +26,21 @@ class PostgresConfig:
 
 
 @dataclass
+class S3Config:
+    BUCKET: Optional[str]
+    HOST: Optional[str]
+    PORT: Optional[int]
+    REGION: Optional[str]
+    ACCESS_KEY: Optional[str]
+    SECRET_ACCESS_KEY: Optional[str]
+    SERVICE_NAME: Optional[str] = "s3"
+
+
+@dataclass
 class DbConfig:
     POSTGRESQL: Optional[PostgresConfig]
     REDIS: Optional[RedisConfig]
+    S3: Optional[S3Config]
 
 
 @dataclass
@@ -141,6 +153,14 @@ def load_consul_config(
                 USERNAME=config("DB", "REDIS", "USERNAME"),
                 PASSWORD=config("DB", "REDIS", "PASSWORD"),
                 PORT=config("DB", "REDIS", "PORT")
+            ),
+            S3=S3Config(
+                HOST=config("S3", "HOST"),
+                PORT=config("S3", "PORT"),
+                REGION=config("S3", "REGION"),
+                ACCESS_KEY=config("S3", "ACCESS_KEY"),
+                SECRET_ACCESS_KEY=config("S3", "SECRET_ACCESS_KEY"),
+                BUCKET=config("S3", "BUCKET")
             )
         )
     )

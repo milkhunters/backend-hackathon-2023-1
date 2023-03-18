@@ -20,10 +20,11 @@ class ChatApplicationService:
     def __init__(
             self,
             chat_repo: ChatRepo,
+            *,
             user_chat_repo: UserChatAssociationRepo,
             user_repo: UserRepo,
             chat_manager: ChatManager,
-            *,
+            message_repo: MessageRepo,
             current_user: Optional[tables.User]
     ):
         self._chat_repo = chat_repo
@@ -31,10 +32,28 @@ class ChatApplicationService:
         self._user_repo = user_repo
         self._chat_manager = chat_manager
         self._current_user = current_user
+        self._message_repo = message_repo
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
-    async def get_dialogs(self) -> list[views.DialogResponse]:
-        pass
+    async def get_my_dialogs(self) -> list[views.DialogItem]:
+        _ = await self._user_chat_repo.get_all(user_id=self._current_user.id)
+        chat_ids = [obj.chat_id for obj in _]
+
+        dialogs = list()
+        for chat_id in chat_ids:
+            dialogs.append(
+                views.DialogItem(
+                    id=chat_id,
+                    title=f"{companion.first_name} {companion.last_name} {companion.patronymic}",
+                    job_title=companion.job_title,
+                    departament=companion.department,
+                    avatar_id=companion.avatar_id,
+                    message_count=await self._message_repo.count(chat_id=chat_id),
+                    role=companion.role
+                )
+            )
+
+        return dialogs
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_dialog_by_user(self, user_id: uuid.UUID) -> views.DialogItem:
@@ -62,6 +81,7 @@ class ChatApplicationService:
             job_title=companion.job_title,
             departament=companion.department,
             avatar_id=companion.avatar_id,
+            message_count=await self._message_repo.count(chat_id=chat_id),
             role=companion.role
         )
 
