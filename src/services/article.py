@@ -13,7 +13,6 @@ from src.views import CreateArticleResponse
 
 class ArticleApplicationService:
 
-
     def __init__(self, article_repo: ArticleRepo, current_user: Optional[tables.User], debug: bool = False):
         self._conn = None
         self.table = None

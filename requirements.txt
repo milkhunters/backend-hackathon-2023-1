@@ -13,5 +13,4 @@ aiodns~=3.0.0
 python-dotenv~=0.21.1
 httpx~=0.23.3
 aiobotocore~=2.4.2
-websockets~=10.4
 pytest~=7.2.1
