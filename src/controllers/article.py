@@ -18,7 +18,7 @@ async def get_article(article_id: uuid.UUID, services: ServiceFactory = Depends(
     return ArticleResponse(message=await services.article.get_article(article_id))
 
 
-@router.get("/get_article_list", response_model=ArticleListResponse, status_code=http_status.HTTP_200_OK)
+@router.get("/list", response_model=ArticleListResponse, status_code=http_status.HTTP_200_OK)
 async def get_article_list_range(count: int, services: ServiceFactory = Depends(get_services)):
     return ArticleListResponse(message=await services.article.get_article_list_range(count))
 
@@ -28,7 +28,7 @@ async def create_article(article: schemas.Article, services: ServiceFactory = De
     return CreateArticleResponse(message=await services.article.create_article(article))
 
 
-"""
+
 @router.put("/list/admin/update", response_model=UpdateArticleResponse, status_code=http_status.HTTP_204_NO_CONTENT)
 async def update_article(services: ServiceFactory = Depends(get_services)):
     pass
@@ -37,4 +37,3 @@ async def update_article(services: ServiceFactory = Depends(get_services)):
 @router.delete("/list/admin/delete", response_model=DeleteArticleResponse, status_code=http_status.HTTP_204_NO_CONTENT)
 async def delete_article(services: ServiceFactory = Depends(get_services)):
     pass
-"""
