@@ -1,7 +1,6 @@
 from src.models import tables
 from . import repository
 from . import auth
-from .admin import AdminApplicationService
 from .chat import ChatApplicationService
 from .user import UserApplicationService
 from .article import ArticleApplicationService
@@ -38,9 +37,6 @@ class ServiceFactory:
             debug=self._debug
         )
 
-    @property
-    def admin(self) -> AdminApplicationService:
-        return AdminApplicationService(self._repo.user, current_user=self._current_user, debug=self._debug)
 
     @property
     def chat(self) -> ChatApplicationService:

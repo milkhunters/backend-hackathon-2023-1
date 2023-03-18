@@ -25,13 +25,26 @@ class ArticleApplicationService:
 
         return schemas.Article.from_orm(article)
 
-    async def get_articles(self, count: Optional[int]) -> schemas.Article:
-        if count is None:
-            articles = await self._article_repo.get_all()
-            return schemas.Article.from_orm(articles)
 
-        if count < 0:
-            raise NotFound(f"Некорректное количество статей!")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @filters(roles=[UserRole.ADMIN])
     async def create_article(self, article: schemas.Article):
