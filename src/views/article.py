@@ -1,4 +1,6 @@
-from src.models.schemas.article import Article, ArticleDelete
+import uuid
+
+from src.models.schemas.article import Article, ArticleDelete, CreateArticle
 from src.views import BaseView
 
 
@@ -11,7 +13,7 @@ class ArticleResponse(BaseView):
 
 
 class CreateArticleResponse(BaseView):
-    message: Article
+    message: uuid.UUID
 
 
 class UpdateArticleResponse(BaseView):
