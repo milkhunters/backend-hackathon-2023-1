@@ -1,3 +1,4 @@
+from .banner import BannerRepo
 from .chat import ChatRepo
 from .file import FileRepo
 from .message import MessageRepo
@@ -35,3 +36,7 @@ class RepoFactory:
     @property
     def article(self) -> ArticleRepo:
         return ArticleRepo(self._session)
+
+    @property
+    def banner(self) -> BannerRepo:
+        return BannerRepo(self._session)

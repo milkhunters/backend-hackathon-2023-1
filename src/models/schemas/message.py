@@ -5,7 +5,6 @@ from typing import Optional
 
 from pydantic import BaseModel, validator
 
-from src.models.enums.role import UserRole
 from src.models.schemas.user import UserSmall
 from src.models.schemas.file import File
 
