@@ -12,7 +12,6 @@ from .user import UserSignUp
 from .user import UserPasswordUpdate
 from .user import UserUpdatePasswordByAdmin
 
-
 from .message import MessageInput
 from .message import MessageFileInclusion
 
