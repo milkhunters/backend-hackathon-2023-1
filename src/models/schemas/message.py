@@ -32,4 +32,4 @@ class MessageFileInclusion(BaseModel):
 
 class MessageInput(BaseModel):
     text: Optional[str]
-    files: list[MessageFileInclusion]
+    files: list[uuid.UUID]

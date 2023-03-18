@@ -103,12 +103,25 @@ class ChatApplicationService:
                 )
                 message_obj = await message_repo.get(id=message_id)
                 file_repo = FileRepo(session)
-                for file in input_data.files:
-                    # todo: check if in database
-                    await file_repo.create(
-                        file_name=file.title,
-                        file_id=file.file_id,
-                        message_id=message_id
+
+                if len(input_data.files) > 10:
+                    raise BadRequest("Максимальное кол-во файлов - 10")
+
+                files = list()
+                for file_id in input_data.files:
+                    file = await file_repo.get(id=file_id)
+                    if not file:
+                        continue  # todo raise
+
+                    if file.message_id:
+                        continue  # todo raise
+
+                    await file_repo.update(file.id, message_id=message_id)
+                    files.append(
+                        schemas.MessageFileInclusion(
+                            title=file.file_name,
+                            file_id=file.id
+                        )
                     )
 
             output_data = views.MessageOutput(
@@ -119,7 +132,7 @@ class ChatApplicationService:
                 first_name=self._current_user.first_name,
                 last_name=self._current_user.last_name,
                 patronymic=self._current_user.patronymic,
-                files=input_data.files,
+                files=files,
                 create_at=message_obj.create_at,
                 update_at=message_obj.update_at
             )
