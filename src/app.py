@@ -27,8 +27,8 @@ app = FastAPI(
     version=config.BASE.VERSION,
     description=config.BASE.DESCRIPTION,
     root_path="/api/v1" if not config.DEBUG else "",
-    docs_url="/api/docs" if config.DEBUG else "/docs",
-    redoc_url="/api/redoc" if config.DEBUG else "/redoc",
+    docs_url="/api/v1/docs" if config.DEBUG else "/docs",
+    redoc_url="/api/v1/redoc" if config.DEBUG else "/redoc",
     contact={
         "name": config.BASE.CONTACT.NAME,
         "url": config.BASE.CONTACT.URL,
