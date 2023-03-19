@@ -118,7 +118,7 @@ class AuthApplicationService:
         if user.role == UserRole.BANNED:
             raise AccessDenied("Пользователь заблокирован")
 
-        new_tokens = self._jwt.generate_tokens(user.id, user.username, user.role.value)
+        new_tokens = self._jwt.generate_tokens(user.id, user.email, user.role.value)
         self._jwt.set_jwt_cookie(response, new_tokens)
         # Для бесшовного обновления токенов: # TODO: возможно убрать отсюда
         request.cookies["access_token"] = new_tokens.access_token
