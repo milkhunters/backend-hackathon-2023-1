@@ -12,6 +12,7 @@ from src.models import schemas
 from src.services import ServiceFactory
 from src.views import dialog
 from src.views.dialog import DialogListResponse, DialogResponse
+from src.views.message import MessageResponse, MessageCountResponse
 
 router = APIRouter()
 
@@ -26,9 +27,14 @@ async def open_dialog(user_id: uuid.UUID, services: ServiceFactory = Depends(get
     return DialogResponse(message=await services.chat.get_dialog_by_user(user_id))
 
 
-@router.get("/chat_history", response_model=DialogResponse, status_code=http_status.HTTP_200_OK)
-async def chat_history(user_id: uuid.UUID, services: ServiceFactory = Depends(get_services)):
-    return DialogResponse(message=await services.chat.get_dialog_by_user(user_id))
+@router.get("/unread_count", response_model=MessageCountResponse, status_code=http_status.HTTP_200_OK)
+async def chat_history(services: ServiceFactory = Depends(get_services)):
+    return MessageCountResponse(message=await services.chat.get_unread_msg_count())
+
+
+@router.get("/{dialog_id}/history", response_model=MessageResponse, status_code=http_status.HTTP_200_OK)
+async def chat_history(dialog_id: uuid.UUID, services: ServiceFactory = Depends(get_services)):
+    return MessageResponse(message=await services.chat.get_message_history(dialog_id))
 
 
 @router.websocket("/{dialog_id}/ws")

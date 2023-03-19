@@ -37,11 +37,36 @@ class ChatApplicationService:
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_unread_msg_count(self) -> int:
-        pass
+        return await self._message_repo.get_unread_by_user_id(self._current_user.id)
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
-    async def get_message_history(self, chat_id):
-        pass
+    async def get_message_history(self, chat_id) -> list[views.MessageOutput]:
+        _ = await self._message_repo.get_all(chat_id=chat_id)
+        messages = list()
+        for message in _:
+            messages.append(
+                views.MessageOutput(
+                    id=str(message.id),
+                    text=message.text,
+                    avatar_id=str(message.owner.avatar_id),
+                    owner_id=str(message.owner_id),
+                    first_name=message.owner.first_name,
+                    last_name=message.owner.last_name,
+                    patronymic=message.owner.patronymic,
+                    is_read=message.is_read,
+                    files=[
+                        schemas.MessageFileInclusion(
+                            file_id=str(file.id),
+                            title=file.file_name
+                        )
+                        for file in message.files
+                    ],
+
+                    create_at=message.create_at,
+                    update_at=message.update_at
+                )
+            )
+        return messages
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_my_dialogs(self) -> list[views.DialogItem]:
@@ -56,7 +81,7 @@ class ChatApplicationService:
                     departament=companion.department,
                     avatar_id=companion.avatar_id,
                     message_count=await self._message_repo.count(chat_id=chat.id),
-                    unread_count=await self._message_repo.count(chat_id=chat.id, is_read=False),
+                    unread_count=await self._message_repo.count(chat_id=chat.id, is_read=False), # todo: fix it
                     role=companion.role
                 )
             )
@@ -64,7 +89,9 @@ class ChatApplicationService:
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_dialog_by_user(self, user_id: uuid.UUID) -> views.DialogItem:
-        # todo user_id = current_id case
+        if str(user_id) == str(self._current_user.id):
+            raise AccessDenied("Вы не можете начать диалог с собой")
+
         companion = await self._user_repo.get(id=user_id)
         if not companion:
             raise NotFound(f"Пользователь {user_id!r} не найден")
@@ -115,6 +142,8 @@ class ChatApplicationService:
         while websocket.client_state == WebSocketState.CONNECTED:
             response = await ws.receive_text(websocket)
 
+            if not response:
+                continue
             try:
                 input_data = schemas.MessageInput(**json.loads(response))
             except ValueError:
