@@ -86,3 +86,7 @@ class FileApplicationService:
             title=file.filename,
             content_type=file.content_type
         )
+
+    @property
+    def file_repo(self):
+        return self._file_repo

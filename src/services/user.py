@@ -98,3 +98,7 @@ class UserApplicationService:
             id=user.id,
             hashed_password=hashed_password
         )
+
+    @filters(roles=[UserRole.ADMIN])
+    async def update_avatar(self, file: uuid.UUID):
+        pass

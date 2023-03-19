@@ -35,4 +35,4 @@ async def update_user_password(data: schemas.UserPasswordUpdate, services: Servi
 
 @router.put("/update/avatar", response_model=None, status_code=http_status.HTTP_200_OK)
 async def update_avatar(file_id: uuid.UUID, service: ServiceFactory = Depends(get_services)):
-    pass
+    return await service.user.update_avatar(file_id)
