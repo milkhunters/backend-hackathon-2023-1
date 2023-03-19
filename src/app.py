@@ -5,6 +5,7 @@ import redis.asyncio as redis
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.openapi.utils import get_openapi
+from starlette.middleware.cors import CORSMiddleware
 
 from src.models import tables
 from src.db import create_psql_async_session
@@ -134,3 +135,10 @@ app.add_exception_handler(RequestValidationError, handle_pydantic_error)
 logging.debug("Registering middleware.")
 app.add_middleware(JWTMiddlewareHTTP)
 app.add_middleware(JWTMiddlewareWS)
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]

@@ -11,11 +11,11 @@ from src.services.repository.base import BaseRepository
 class MessageRepo(BaseRepository[tables.Message]):
     table = tables.Message
 
-    async def get_all(self, **kwargs) -> list[tables.Message]:
-        return (
-            await self._conn.execute(
-                select(self.table).filter_by(**kwargs).limit(100)
-                .options(contains_eager(tables.Message.owner), contains_eager(tables.Message.files))
-            )
-        ).unique().scalars().all()
+    # async def get_all(self, **kwargs) -> list[tables.Message]:
+    #     return (
+    #         await self._conn.execute(
+    #             select(self.table).filter_by(**kwargs).limit(100)
+    #             .options(contains_eager(tables.Message.owner), contains_eager(tables.Message.files))
+    #         )
+    #     ).unique().scalars().all()
 

@@ -1,4 +1,5 @@
 import json
+import logging
 import uuid
 from typing import Optional
 
@@ -26,6 +27,7 @@ class ChatApplicationService:
             user_repo: UserRepo,
             chat_manager: ChatManager,
             message_repo: MessageRepo,
+            file_repo: FileRepo,
             current_user: Optional[tables.User]
     ):
         self._chat_repo = chat_repo
@@ -34,6 +36,7 @@ class ChatApplicationService:
         self._chat_manager = chat_manager
         self._current_user = current_user
         self._message_repo = message_repo
+        self._file_repo = file_repo
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_unread_msg_count(self) -> int:
@@ -63,22 +66,23 @@ class ChatApplicationService:
         _ = await self._message_repo.get_all(chat_id=chat_id)
         messages = list()
         for message in _:
+            owner = await self._user_repo.get(id=message.owner_id)
             messages.append(
                 views.MessageOutput(
                     id=str(message.id),
                     text=message.text,
-                    avatar_id=str(message.owner.avatar_id) if message.owner.avatar_id else None,
+                    avatar_id=str(owner.avatar_id) if owner.avatar_id else None,
                     owner_id=str(message.owner_id),
-                    first_name=message.owner.first_name,
-                    last_name=message.owner.last_name,
-                    patronymic=message.owner.patronymic,
+                    first_name=owner.first_name,
+                    last_name=owner.last_name,
+                    patronymic=owner.patronymic,
                     is_read=message.is_read,
                     files=[
                         schemas.MessageFileInclusion(
                             file_id=str(file.id),
                             title=file.file_name
                         )
-                        for file in message.files
+                        for file in await self._file_repo.get_all(message_id=message.id)
                     ],
 
                     create_at=message.create_at,

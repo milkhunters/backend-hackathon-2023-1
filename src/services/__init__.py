@@ -49,7 +49,8 @@ class ServiceFactory:
             user_repo=self._repo.user,
             chat_manager=self._chat_manager,
             current_user=self._current_user,
-            message_repo=self._repo.message
+            message_repo=self._repo.message,
+            file_repo=self._repo.file
         )
 
     @property
