@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
+from src.exceptions import BadRequest
 from src.models import tables, schemas
 from src.models.enums import UserRole
 from src.models.schemas import Banner
@@ -27,6 +28,6 @@ class BannerApplicationService:
         if not file:
             raise BadRequest(f"Файл {file_id} не был обнаружен!")
 
-        banner = Banner(file_id=file_id, id=uuid.uuid4(), create_at=datetime.now())
+        banner = Banner(file_id=file_id)
         await self._banner_repo.create(**banner.dict())
 

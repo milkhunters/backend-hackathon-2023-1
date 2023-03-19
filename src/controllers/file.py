@@ -3,7 +3,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, UploadFile
 from fastapi import status as http_status
-from starlette.responses import StreamingResponse, Response
+from fastapi.responses import StreamingResponse, Response
 
 from src.dependencies.services import get_services
 from src.services import ServiceFactory

@@ -44,6 +44,21 @@ class ChatApplicationService:
         return unread_count
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
+    async def mark_msg_as_read(self, message_id: uuid.UUID) -> None:
+        message = await self._message_repo.get(id=message_id)
+        if not message:
+            raise NotFound(f"Сообщение с id {message_id!r} не найдено")
+        if message.owner_id == self._current_user.id:
+            raise AccessDenied("Вы не можете пометить своё сообщение как прочитанное")
+        chat_id = await self._user_chat_repo.get_chat_id(
+            user_id_one=self._current_user.id,
+            user_id_two=message.owner_id
+        )
+        if not chat_id:
+            raise NotFound("Пользователи должны быть в одном чате")
+        await self._message_repo.update(message_id, is_read=True)
+
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_message_history(self, chat_id) -> list[views.MessageOutput]:
         _ = await self._message_repo.get_all(chat_id=chat_id)
         messages = list()

@@ -89,11 +89,6 @@ class UserUpdate(BaseModel):
     avatar_id: Optional[str]
 
 
-class UserUpdatePasswordByAdmin(BaseModel):
-    id: uuid.UUID
-    password: str
-
-
 class UserPasswordUpdate(BaseModel):
     old_password: str
     new_password: str

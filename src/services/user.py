@@ -42,9 +42,11 @@ class UserApplicationService:
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def update_me(self, data: schemas.UserUpdate) -> None:
-        file = await self._file_repo.get(id=data.avatar_id)
-        if not file:
-            raise NotFound("Файл не найден!")
+
+        if data.avatar_id:
+            file = await self._file_repo.get(id=data.avatar_id)
+            if not file:
+                raise NotFound("Файл не найден!")
 
         await self._repo.update(
             id=self._current_user.id,
@@ -71,7 +73,7 @@ class UserApplicationService:
             raise AccessDenied("Вы не можете удалить самого себя")
 
     @filters(roles=[UserRole.ADMIN, UserRole.USER, UserRole.HIGH_USER])
-    async def user_password_update_by_user(self, data: schemas.UserPasswordUpdate):
+    async def update_my_password(self, data: schemas.UserPasswordUpdate):
 
         user = await self._repo.get(id=self._current_user.id)
         if not verify_password(data.old_password, storage=user.hashed_password):
@@ -88,21 +90,20 @@ class UserApplicationService:
         )
 
     @filters(roles=[UserRole.ADMIN])
-    async def user_password_update_by_admin(self, data: schemas.UserUpdatePasswordByAdmin):
-        user = await self._repo.get(id=data.id)
+    async def update_user_password(self, user_id: uuid.UUID, password: str):
+        user = await self._repo.get(id=user_id)
         if not user:
             raise NotFound(f"Пользователь с id {user.id!r} не найден!")
 
-        if verify_password(data.password, storage=user.hashed_password):
+        if verify_password(password, storage=user.hashed_password):
             raise BadRequest("Новый и старый пароль совпадают!")
 
-        hashed_password = get_hashed_password(data.password)
+        hashed_password = get_hashed_password(password)
 
         await self._repo.update(
             id=user.id,
             hashed_password=hashed_password
         )
-
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_users(self) -> list[schemas.UserSmall]:
@@ -112,4 +113,3 @@ class UserApplicationService:
     @filters(roles=[UserRole.ADMIN])
     async def update_avatar(self, file: uuid.UUID):
         pass
-
