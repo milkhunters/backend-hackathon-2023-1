@@ -17,7 +17,7 @@ async def get_dialog_list(services: ServiceFactory = Depends(get_services)):
     return DialogListResponse(message=await services.chat.get_my_dialogs())
 
 
-@router.post("/open", response_model=DialogResponse, status_code=http_status.HTTP_200_OK)
+@router.get("/open", response_model=DialogResponse, status_code=http_status.HTTP_200_OK)
 async def open_dialog(user_id: uuid.UUID, services: ServiceFactory = Depends(get_services)):
     return DialogResponse(message=await services.chat.get_dialog_by_user(user_id))
 

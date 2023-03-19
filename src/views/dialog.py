@@ -11,9 +11,8 @@ class DialogItem(BaseModel):
     id: uuid.UUID
     title: str
     job_title: str
-    departament: str
+    department: str
     avatar_id: Optional[str]
-    message_count: int
     unread_count: int
     role: UserRole
 

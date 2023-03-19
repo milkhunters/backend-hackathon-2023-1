@@ -1,14 +1,9 @@
-import uuid
-from typing import Optional
-
 from fastapi import APIRouter, Depends
 from fastapi import status as http_status
 
 from src.dependencies.services import get_services
-from src.models import schemas
 from src.services import ServiceFactory
-from src.views.article import ArticleListResponse, CreateArticleResponse, UpdateArticleResponse, DeleteArticleResponse, \
-    ArticleResponse
+from src.views.article import ArticleListResponse
 
 router = APIRouter()
 

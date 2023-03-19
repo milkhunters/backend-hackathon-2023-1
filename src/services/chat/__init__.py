@@ -97,7 +97,7 @@ class ChatApplicationService:
                     id=chat.id,
                     title=f"{companion.first_name} {companion.last_name} {companion.patronymic}",
                     job_title=companion.job_title,
-                    departament=companion.department,
+                    department=companion.department,
                     avatar_id=companion.avatar_id,
                     message_count=await self._message_repo.count(chat_id=chat.id),
                     unread_count=await self._message_repo.count(chat_id=chat.id, is_read=False),  # todo: fix it
@@ -132,9 +132,8 @@ class ChatApplicationService:
             id=chat_id,
             title=f"{companion.first_name} {companion.last_name} {companion.patronymic}",
             job_title=companion.job_title,
-            departament=companion.department,
+            department=companion.department,
             avatar_id=companion.avatar_id,
-            message_count=await self._message_repo.count(chat_id=chat_id),
             unread_count=await self._message_repo.count(chat_id=chat_id, is_read=False),
             role=companion.role
         )
