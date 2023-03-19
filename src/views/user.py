@@ -15,4 +15,4 @@ class UserSmallResponse(BaseView):
 
 
 class UserListResponse(BaseView):
-    message: list[User]
+    message: list[UserSmallResponse]

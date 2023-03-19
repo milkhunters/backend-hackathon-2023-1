@@ -7,7 +7,7 @@ from src.dependencies.services import get_services
 from src.models import schemas
 from src.services import ServiceFactory
 
-from src.views.user import UserSmallResponse, UserSmallListResponse
+from src.views.user import UserSmallResponse, UserListResponse
 from src.views.user import UserBigResponse
 
 router = APIRouter()
@@ -28,9 +28,9 @@ async def update_my_password(data: schemas.UserPasswordUpdate, services: Service
     await services.user.update_my_password(data)
 
 
-@router.get("/list", response_model=UserSmallListResponse, status_code=http_status.HTTP_200_OK)
+@router.get("/list", response_model=UserListResponse, status_code=http_status.HTTP_200_OK)
 async def get_users(service: ServiceFactory = Depends(get_services)):
-    return UserSmallListResponse(message=await service.user.get_users())
+    return UserListResponse(message=await service.user.get_users())
 
 
 @router.get("/{user_id}", response_model=UserSmallResponse, status_code=http_status.HTTP_200_OK)
