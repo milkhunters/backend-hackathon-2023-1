@@ -10,7 +10,13 @@ from src.models.enums.role import UserRole
 
 def is_valid_email(email: str) -> bool:
     pattern = r"^[-\w\.]+@([-\w]+\.)+[-\w]{2,10}$"
-    return re.match(pattern, email) is not None
+    access_domain = ["milk.com", "gmail.com", "milkhunters.ru"]
+    is_ok = False
+    for domain in access_domain:
+        if email.endswith(domain):
+            is_ok = True
+            break
+    return (re.match(pattern, email) is not None) and is_ok
 
 
 def is_valid_password(password: str) -> bool:
