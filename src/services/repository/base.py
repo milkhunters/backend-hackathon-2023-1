@@ -1,7 +1,7 @@
 import uuid
 from typing import Generic, Type, TypeVar, Optional
 
-from sqlalchemy import insert, update, delete, func, select, desc
+from sqlalchemy import insert, update, delete, func, select, desc, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 T = TypeVar('T')
@@ -75,7 +75,11 @@ class BaseRepository(Generic[T]):
         :param kwargs:
         :return:
         """
-        return (await self._conn.execute(select(func.count()).where(**kwargs))).scalar()
+        conditions = []
+        for key, value in kwargs.items():
+            conditions.append(getattr(self.table.__table__.c, key) == value)
+        condition = and_(*conditions)
+        return (await self._conn.execute(select(func.count()).where(condition))).scalar()
 
     @property
     def session(self):

@@ -28,6 +28,7 @@ class BadRequest(APIError):
     def __init__(self, message: str = None) -> None:
         super().__init__(message=message if message else self.message, status_code=self.status_code)
 
+
 class AccessDenied(APIError):
     status_code = 403
     message = "Access denied"
@@ -50,7 +51,6 @@ class AlreadyExists(APIError):
 
     def __init__(self, message: str = None) -> None:
         super().__init__(message=message if message else self.message, status_code=self.status_code)
-
 
 
 async def handle_api_error(request, exc):

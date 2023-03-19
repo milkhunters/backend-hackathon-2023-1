@@ -25,8 +25,7 @@ class UserChatAssociationRepo(BaseRepository[tables.UserChatAssociation]):
         result = await self._conn.execute(request)
         return result.scalar()
 
-    async def get__info(self, user_id: uuid.UUID):
-        # todo test
+    async def get_chats(self, user_id: uuid.UUID) -> list[tuple[tables.User, tables.UserChatAssociation, tables.Chat]]:
         request = select(tables.User, self.table, tables.Chat). \
             join(self.table, and_(tables.User.id == self.table.user_id)). \
             join(tables.Chat, and_(self.table.chat_id == tables.Chat.id)). \
@@ -36,6 +35,5 @@ class UserChatAssociationRepo(BaseRepository[tables.UserChatAssociation]):
             tables.User.id != user_id))
 
         result = await self.session.execute(request)
-        rows = result.fetchall()
-        pass
+        return result.unique().fetchall()
 
