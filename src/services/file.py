@@ -25,7 +25,7 @@ class FileApplicationService:
     async def get_file_info(self, file_id: uuid.UUID) -> views.FileItem:
         file = await self._file_repo.get(id=file_id)
         if not file:
-            NotFound(f"Файл с id {file_id!r} не найден")
+            raise NotFound(f"Файл с id {file_id!r} не найден")
 
         async with self._file_storage as storage:
             file_info = await storage.get(
@@ -46,7 +46,7 @@ class FileApplicationService:
     async def get_file(self, file_id: uuid.UUID):
         file = await self._file_repo.get(id=file_id)
         if not file:
-            NotFound(f"Файл с id {file_id!r} не найден")
+            raise NotFound(f"Файл с id {file_id!r} не найден")
 
         async with self._file_storage as storage:
             file_info = await storage.get(
