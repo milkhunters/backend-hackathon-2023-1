@@ -67,12 +67,13 @@ class UserApplicationService:
             raise AccessDenied("Вы не можете удалить самого себя")
 
     @filters(roles=[UserRole.ADMIN, UserRole.USER, UserRole.HIGH_USER])
-    async def user_password_update_by_user(self, old_password: str, new_password: schemas.UserPasswordUpdate):
-        user = self._current_user
-        if not verify_password(old_password, storage=user.hashed_password):
+    async def user_password_update_by_user(self, data: schemas.UserPasswordUpdate):
+
+        user = await self._repo.get(id=self._current_user.id)
+        if not verify_password(data.old_password, storage=user.hashed_password):
             raise BadRequest("Некорректный старый пароль!")
 
-        hashed_password = get_hashed_password(new_password.password)
+        hashed_password = get_hashed_password(str(data.new_password))
         await self._repo.update(
             id=self._current_user.id,
             hashed_password=hashed_password
