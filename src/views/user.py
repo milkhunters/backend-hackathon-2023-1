@@ -12,3 +12,7 @@ class UserMiddleResponse(BaseView):
 
 class UserSmallResponse(BaseView):
     message: UserSmall
+
+
+class UserListResponse(BaseView):
+    message: list[User]
