@@ -12,13 +12,12 @@ from src.services.repository import UserRepo, FileRepo
 
 class UserApplicationService:
 
-    def __init__(self, user_repo: UserRepo, file_repo: FileRepo, *, current_user: Optional[tables.User], debug: bool = False):
+    def __init__(self, user_repo: UserRepo, *, file_repo: FileRepo, current_user: Optional[tables.User]):
         self._repo = user_repo
-        self._current_user = current_user
-        self._debug = debug
         self._file_repo = file_repo
+        self._current_user = current_user
 
-    @filters(roles=[UserRole.ADMIN, UserRole.USER])
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_me(self) -> schemas.User:
         return schemas.User.from_orm(await self._repo.get(id=self._current_user.id))
 
@@ -47,6 +46,10 @@ class UserApplicationService:
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def update_me(self, data: schemas.UserUpdate) -> None:
+        file = await self._file_repo.get(id=data.avatar_id)
+        if not file:
+            raise NotFound("Файл не найден!")
+
         await self._repo.update(
             id=self._current_user.id,
             **data.dict(exclude_unset=True)
@@ -104,10 +107,13 @@ class UserApplicationService:
             hashed_password=hashed_password
         )
 
-    @filters(roles=[UserRole.ADMIN, UserRole.USER, UserRole.HIGH_USER])
-    async def update_my_avatar(self, file_id: uuid.UUID):
-        file = await self._file_repo.get(id=file_id)
-        if not file:
-            raise BadRequest(f"Файл {file_id} не был обнаружен!")
 
-        await self._repo.update(avatar_id=file_id, id=self._current_user.id)
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
+    async def get_users(self) -> list[schemas.UserSmall]:
+        users = await self._repo.get_all()
+        return [schemas.UserSmall.from_orm(user) for user in users]
+
+    @filters(roles=[UserRole.ADMIN])
+    async def update_avatar(self, file: uuid.UUID):
+        pass
+

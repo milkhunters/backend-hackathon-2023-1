@@ -16,7 +16,7 @@ class ChatManager:
         await self._rooms[room_id]['ws'].connect(websocket)
 
     async def disconnect(self, websocket: WebSocket, room_id: uuid.UUID) -> None:
-        ws: WSJWTConnectionManager = await self._rooms[room_id]['ws']
+        ws: WSJWTConnectionManager = self._rooms[room_id]['ws']
         await ws.disconnect(websocket)
         if ws.connections == 0:
             self._rooms.pop(room_id)
