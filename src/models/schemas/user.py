@@ -104,6 +104,8 @@ class UserPasswordUpdate(BaseModel):
             raise ValueError("Слабый или невалидный password!")
         return value
 
+
+
 class UserUpdateByAdmin(BaseModel):
     email: Optional[str]
     role: Optional[UserRole]

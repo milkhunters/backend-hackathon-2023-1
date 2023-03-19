@@ -73,6 +73,9 @@ class UserApplicationService:
         if not verify_password(data.old_password, storage=user.hashed_password):
             raise BadRequest("Некорректный старый пароль!")
 
+        if verify_password(data.new_password, storage=user.hashed_password):
+            raise BadRequest("Новый и старый пароль совпадают!")
+
         hashed_password = get_hashed_password(str(data.new_password))
 
         await self._repo.update(
