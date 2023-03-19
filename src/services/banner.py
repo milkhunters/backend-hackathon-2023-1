@@ -11,9 +11,10 @@ from src.services.repository import ArticleRepo, FileRepo, BannerRepo
 
 class BannerApplicationService:
 
-    def __init__(self, banner_repo: BannerRepo, *, current_user: Optional[tables.User]):
+    def __init__(self, banner_repo: BannerRepo, file_repo: FileRepo, *, current_user: Optional[tables.User]):
         self._banner_repo = banner_repo
         self._current_user = current_user
+        self._file_repo = file_repo
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_banners(self) -> list[schemas.Banner]:
@@ -22,6 +23,10 @@ class BannerApplicationService:
 
     @filters(roles=[UserRole.ADMIN])
     async def add_banner(self, file_id: uuid.UUID):
+        file = await self._file_repo.get(id=file_id)
+        if not file:
+            raise BadRequest(f"Файл {file_id} не был обнаружен!")
+
         banner = Banner(file_id=file_id, id=uuid.uuid4(), create_at=datetime.now())
         await self._banner_repo.create(**banner.dict())
 

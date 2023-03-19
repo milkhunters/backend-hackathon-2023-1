@@ -103,7 +103,13 @@ class UserApplicationService:
             hashed_password=hashed_password
         )
 
+
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_users(self) -> list[schemas.UserSmall]:
         users = await self._repo.get_all()
         return [schemas.UserSmall.from_orm(user) for user in users]
+
+    @filters(roles=[UserRole.ADMIN])
+    async def update_avatar(self, file: uuid.UUID):
+        pass
+
