@@ -27,5 +27,5 @@ class MessageResponse(BaseView):
     message: list[MessageOutput]
 
 
-class MessageCountResponse(BaseModel):
+class MessageCountResponse(BaseView):
     message: int
