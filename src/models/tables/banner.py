@@ -13,8 +13,9 @@ class Banner(Base):
     __table_args__ = {'extend_existing': True}
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    file_name = Column(String(255), default="file")
     file_id = Column(UUID(as_uuid=True))
+
+    create_at = Column(DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
         return f'<{self.__class__.__name__}: {self.id}>'

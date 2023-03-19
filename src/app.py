@@ -8,16 +8,17 @@ from fastapi.openapi.utils import get_openapi
 
 from src.models import tables
 from src.db import create_psql_async_session
-from src.middleware import JWTMiddlewareHTTP
+from src.middleware import JWTMiddlewareHTTP, JWTMiddlewareWS
 from src.config import load_consul_config
 from src.exceptions import APIError, handle_api_error, handle_404_error, handle_pydantic_error
 
 from src.router import reg_root_api_router
+from src.services.chat import ChatManager
+from src.services.storage.s3 import S3Storage
 from src.utils import RedisClient, AiohttpClient
 
 config = load_consul_config(os.getenv('CONSUL_ROOT', "hackathon-2023-1-dev"), host="192.168.3.41")
 logging.basicConfig(level=logging.DEBUG if config.DEBUG else logging.INFO)
-
 
 logging.debug("Инициализация приложения FastAPI.")
 app = FastAPI(
@@ -26,8 +27,8 @@ app = FastAPI(
     version=config.BASE.VERSION,
     description=config.BASE.DESCRIPTION,
     root_path="/api/v1" if not config.DEBUG else "",
-    docs_url="/api/docs" if config.DEBUG else "/docs",
-    redoc_url="/api/redoc" if config.DEBUG else "/redoc",
+    docs_url="/api/v1/docs" if config.DEBUG else "/docs",
+    redoc_url="/api/v1/redoc" if config.DEBUG else "/redoc",
     contact={
         "name": config.BASE.CONTACT.NAME,
         "url": config.BASE.CONTACT.URL,
@@ -52,6 +53,18 @@ async def init_postgresql_db():
         await conn.run_sync(tables.Base.metadata.create_all)
 
 
+def init_s3_storage():
+    app.state.file_storage = S3Storage(
+        bucket=config.DB.S3.BUCKET,
+        service_name=config.DB.S3.SERVICE_NAME,
+        host=config.DB.S3.HOST,
+        port=config.DB.S3.PORT,
+        region_name=config.DB.S3.REGION,
+        access_key=config.DB.S3.ACCESS_KEY,
+        secret_access_key=config.DB.S3.SECRET_ACCESS_KEY,
+    )
+
+
 async def redis_pool(db: int = 0):
     return await redis.Redis(
         host=config.DB.REDIS.HOST,
@@ -68,8 +81,12 @@ async def redis_pool(db: int = 0):
 async def on_startup():
     logging.debug("Executing FastAPI startup event handler.")
     await init_postgresql_db()
+    init_s3_storage()
+
     app.state.redis = RedisClient(await redis_pool())
     app.state.http_client = AiohttpClient()
+    app.state.chat_manager = ChatManager()
+
     logging.debug("FastAPI startup event handler executed.")
 
 
@@ -116,3 +133,4 @@ app.add_exception_handler(404, handle_404_error)
 app.add_exception_handler(RequestValidationError, handle_pydantic_error)
 logging.debug("Registering middleware.")
 app.add_middleware(JWTMiddlewareHTTP)
+app.add_middleware(JWTMiddlewareWS)

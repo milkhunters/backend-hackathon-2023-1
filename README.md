@@ -24,8 +24,8 @@
 | Логин            | Пароль        | Роль                     |
 |------------------|---------------|--------------------------|
 | `admin@milk.com` | `Password123` | Администратор            |
-| `HUser@milk.com` | `Password123` | Пользователь 1-го уровня |
-| `user@milk.com`  | `Password123` | Пользователь 2-го уровня |
+| `user1@milk.com` | `Password123` | Пользователь 1-го уровня |
+| `user2@milk.com` | `Password123` | Пользователь 2-го уровня |
 
 * Несмотря на то, что пароли кажутся простыми, их валидация
 полностью соответствует требованиям задания.
@@ -63,45 +63,49 @@
 
 ```
 # --- Необязательные параметры ---
-env-app-name/BASE/CONTACT/EMAIL
-env-app-name/BASE/CONTACT/NAME
-env-app-name/BASE/CONTACT/URL
-env-app-name/BASE/DESCRIPTION
-env-app-name/BASE/TITLE
+consul_root/BASE/CONTACT/EMAIL
+consul_root/BASE/CONTACT/NAME
+consul_root/BASE/CONTACT/URL
+consul_root/BASE/DESCRIPTION
+consul_root/BASE/TITLE
 
 # --- Обязательные параметры ---
-env-app-name/BASE/JWT/ACCESS_SECRET_KEY
-env-app-name/BASE/JWT/REFRESH_SECRET_KEY
+consul_root/BASE/JWT/ACCESS_SECRET_KEY
+consul_root/BASE/JWT/REFRESH_SECRET_KEY
 
-env-app-name/DB/POSTGRESQL/DATABASE
-env-app-name/DB/POSTGRESQL/HOST
-env-app-name/DB/POSTGRESQL/PASSWORD
-env-app-name/DB/POSTGRESQL/PORT
-env-app-name/DB/POSTGRESQL/USERNAME
+consul_root/DB/POSTGRESQL/DATABASE
+consul_root/DB/POSTGRESQL/HOST
+consul_root/DB/POSTGRESQL/PASSWORD
+consul_root/DB/POSTGRESQL/PORT
+consul_root/DB/POSTGRESQL/USERNAME
 
-env-app-name/DB/REDIS/HOST
-env-app-name/DB/REDIS/PASSWORD
-env-app-name/DB/REDIS/PORT
-env-app-name/DB/REDIS/USERNAME
+consul_root/DB/REDIS/HOST
+consul_root/DB/REDIS/PASSWORD
+consul_root/DB/REDIS/PORT
+consul_root/DB/REDIS/USERNAME
 
-env-app-name/S3/ACCESS_KEY
-env-app-name/S3/BUCKET
-env-app-name/S3/DIRECT_URL
-env-app-name/S3/HOST
-env-app-name/S3/PORT
-env-app-name/S3/REGION
-env-app-name/S3/SECRET_ACCESS_KEY
+consul_root/S3/ACCESS_KEY
+consul_root/S3/BUCKET
+consul_root/S3/DIRECT_URL
+consul_root/S3/HOST
+consul_root/S3/PORT
+consul_root/S3/REGION
+consul_root/S3/SECRET_ACCESS_KEY
 ```
 
 ### Через переменные окружения
 
 Также, можно указать некоторые параметры через переменные окружения:
 
-- `APP_NAME` - имя приложения (необходимо для consul kv)
-- `BUILD_COUNT` - номер сборки (string)
-- `MODE` - режим запуска приложения (dev, prod)
+- `CONSUL_ROOT` - необходимо для consul kv
 - `DEBUG` - включить режим отладки (1, 0)
 
+Если `DEBUG=0`, ожидаемый корневой маршрут `/api/v1`
+
+Если `DEBUG=1`, повышенное логирование, `http 500` 
+отображаются пользователю
+
+Рекомендуется запускать локально в режиме `DEBUG=1`
 ## Запуск
 
 ### Зависимости
@@ -124,7 +128,7 @@ pip install -r requirements.txt
 ```bash
 uvicorn src.app:app --proxy-headers --host 127.0.0.1 --port 8080
 ```
-Используйте `http://127.0.0.1:8080/api/docs` для доступа к Swagger документации.
+Используйте `http://127.0.0.1:8080/api/v1/docs` для доступа к Swagger документации.
 
 ### Docker
 
@@ -135,7 +139,7 @@ docker build -t milk-hackathon .
 ```
 
 ```bash
-docker run -p 8080:8080 -e MODE=dev -e DEBUG=0 milk-hackathon
+docker run -p 8080:8080 -e CONSUL_ROOT="consul_root" -e DEBUG=1 milk-hackathon
 ```
 
 ## Об архитектуре и технологиях

@@ -16,6 +16,11 @@ class Article(BaseModel):
         orm_mode = True
 
 
+class CreateArticle(BaseModel):
+    title: str
+    text: str
+
+
 class ArticleDelete(Article):
     id: uuid.UUID
 
