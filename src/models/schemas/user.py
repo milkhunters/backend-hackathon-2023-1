@@ -95,13 +95,14 @@ class UserUpdatePasswordByAdmin(BaseModel):
 
 
 class UserPasswordUpdate(BaseModel):
-    password: str
+    old_password: str
+    new_password: str
 
-    @validator('password')
+    @validator('new_password')
     def password_must_be_valid(cls, value):
         if not (is_valid_password(value)):
             raise ValueError("Слабый или невалидный password!")
-
+        return value
 
 class UserUpdateByAdmin(BaseModel):
     email: Optional[str]
