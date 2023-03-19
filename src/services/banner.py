@@ -1,17 +1,21 @@
 import uuid
-from typing import Optional
+from datetime import datetime
+from typing import Optional, Any, Coroutine
+from uuid import UUID
 
 from fastapi import UploadFile
 from sqlalchemy.sql import roles
 
-from src import views
+from src import views, services
 from src.exceptions import NotFound, BadRequest
 from src.models import tables, schemas
 from src.models.enums import UserRole
 from src.models.enums.content_type import ContentType
+from src.models.schemas import Banner
 from src.services.auth import filters
 from src.services.repository import ArticleRepo, FileRepo, BannerRepo
 from src.services.storage.base import AbstractStorage, File
+from src.views import FileItem
 
 
 class BannerApplicationService:
@@ -24,3 +28,9 @@ class BannerApplicationService:
     async def get_banners(self) -> list[schemas.Banner]:
         banners = await self._banner_repo.get_all()
         return [schemas.Banner.from_orm(banner) for banner in banners]
+
+    @filters(roles=[UserRole.ADMIN])
+    async def add_banner(self, file_id: uuid.UUID):
+        banner = Banner(file_id=file_id, id=uuid.uuid4(), create_at=datetime.now())
+        await self._banner_repo.create(**banner.dict())
+
