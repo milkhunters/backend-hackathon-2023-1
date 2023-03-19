@@ -133,7 +133,7 @@ class ChatApplicationService:
             title=f"{companion.first_name} {companion.last_name} {companion.patronymic}",
             job_title=companion.job_title,
             department=companion.department,
-            avatar_id=companion.avatar_id,
+            avatar_id=str(companion.avatar_id) if companion.avatar_id else None,
             unread_count=await self._message_repo.count(chat_id=chat_id, is_read=False),
             role=companion.role
         )
