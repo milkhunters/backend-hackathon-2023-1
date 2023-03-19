@@ -1,21 +1,12 @@
 import uuid
 from datetime import datetime
-from typing import Optional, Any, Coroutine
-from uuid import UUID
+from typing import Optional
 
-from fastapi import UploadFile
-from sqlalchemy.sql import roles
-
-from src import views, services
-from src.exceptions import NotFound, BadRequest
 from src.models import tables, schemas
 from src.models.enums import UserRole
-from src.models.enums.content_type import ContentType
 from src.models.schemas import Banner
 from src.services.auth import filters
 from src.services.repository import ArticleRepo, FileRepo, BannerRepo
-from src.services.storage.base import AbstractStorage, File
-from src.views import FileItem
 
 
 class BannerApplicationService:

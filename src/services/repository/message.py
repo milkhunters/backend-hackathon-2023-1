@@ -19,13 +19,3 @@ class MessageRepo(BaseRepository[tables.Message]):
             )
         ).unique().scalars().all()
 
-    async def get_unread_by_user_id(self, user_id: uuid.UUID) -> int:
-        result = (await self.session.execute(
-            select(
-                func.count(self.table.id)
-            )
-            .join(tables.Chat, tables.Chat.id == tables.Message.chat_id)
-            .join(tables.UserChatAssociation, tables.UserChatAssociation.chat_id == tables.Chat.id)
-            .where(and_(tables.UserChatAssociation.user_id == user_id, tables.Message.is_read == False, tables.Message.owner_id != user_id))
-        )).scalar()
-        return result
