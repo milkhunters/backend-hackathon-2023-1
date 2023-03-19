@@ -27,7 +27,7 @@ class ArticleApplicationService:
 
         return schemas.Article.from_orm(article)
 
-    @filters(roles=[UserRole.ADMIN])
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_article_list_range(self, count: int):
         return await self._repo.get_range(count, column=self._repo.table.create_at)
 

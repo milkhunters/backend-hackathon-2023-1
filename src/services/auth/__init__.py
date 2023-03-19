@@ -30,7 +30,7 @@ class AuthApplicationService:
         self._current_user = current_user
         self._debug = debug
 
-    @filters(roles=[UserRole.ADMIN])
+    @filters(roles=[UserRole.ADMIN, UserRole.GUEST])
     async def create_user(self, user: schemas.UserSignUp) -> None:
         """
         Создание нового пользователя
