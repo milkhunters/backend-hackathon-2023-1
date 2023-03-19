@@ -28,6 +28,5 @@ class BannerApplicationService:
         if not file:
             raise BadRequest(f"Файл {file_id} не был обнаружен!")
 
-        banner = Banner(file_id=file_id)
-        await self._banner_repo.create(**banner.dict())
+        await self._banner_repo.create(file_id=file_id)
 
