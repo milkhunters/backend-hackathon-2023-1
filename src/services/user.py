@@ -41,6 +41,10 @@ class UserApplicationService:
             return schemas.User.from_orm(user)
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
+    async def get_user_list(self):
+        return await self._repo.get_all()
+
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def update_me(self, data: schemas.UserUpdate) -> None:
 
         if data.avatar_id:
