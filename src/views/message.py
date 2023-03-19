@@ -5,6 +5,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from src.models.schemas import MessageFileInclusion
+from src.views import BaseView
 
 
 class MessageOutput(BaseModel):
@@ -20,3 +21,11 @@ class MessageOutput(BaseModel):
 
     create_at: datetime
     update_at: Optional[datetime]
+
+
+class MessageResponse(BaseView):
+    message: list[MessageOutput]
+
+
+class MessageCountResponse(BaseView):
+    message: int
