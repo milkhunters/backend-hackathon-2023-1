@@ -69,6 +69,19 @@ class UserApplicationService:
             **data.dict(exclude_unset=True)
         )
 
+    @filters(roles=[UserRole.HIGH_USER])
+    async def update_user_byHigh(self, user_id: uuid.UUID, data: schemas.UserUpdateByHigh) -> None:
+        user = await self._repo.get(id=user_id)
+
+        if not user:
+            raise NotFound(f"Пользователь с id {user_id!r} не найден!")
+
+        await self._repo.update(
+            id=user_id,
+            **data.dict(exclude_unset=True)
+        )
+
+
     @filters(roles=[UserRole.ADMIN])
     async def delete_user(self, user_id: uuid.UUID) -> None:
         if self._current_user.id != uuid.UUID:
@@ -93,8 +106,7 @@ class UserApplicationService:
             hashed_password=hashed_password
         )
 
-    @filters(roles=[UserRole.ADMIN])
-    async def update_user_password(self, user_id: uuid.UUID, password: str):
+    async def _update_user_password(self, user_id: uuid.UUID, password: str):
         user = await self._repo.get(id=user_id)
         if not user:
             raise NotFound(f"Пользователь с id {user.id!r} не найден!")
@@ -108,6 +120,14 @@ class UserApplicationService:
             id=user.id,
             hashed_password=hashed_password
         )
+
+    @filters(roles=[UserRole.ADMIN])
+    async def update_user_password(self, user_id: uuid.UUID, password: str):
+        await self._update_user_password(user_id, password)
+
+    @filters(roles=[UserRole.HIGH_USER])
+    async def update_user_password_byHigh(self, user_id: uuid.UUID, password: str):
+        await self._update_user_password(user_id, password)
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_users(self) -> list[schemas.UserSmall]:

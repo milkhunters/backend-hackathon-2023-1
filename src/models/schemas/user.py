@@ -108,6 +108,9 @@ class UserPasswordUpdate(BaseModel):
 
 class UserUpdateByAdmin(BaseModel):
     email: Optional[str]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    patronymic: Optional[str]
     role: Optional[UserRole]
 
     @validator('email')
@@ -122,4 +125,19 @@ class UserUpdateByAdmin(BaseModel):
             UserRole(value)
         except ValueError:
             raise ValueError(f"Значение {value!r} инвалидное для UserRole")
+        return value
+
+
+class UserUpdateByHigh(BaseModel):
+    role: Optional[UserRole]
+    avatar_id: Optional[str]
+
+    @validator('role')
+    def role_must_be_valid(cls, value):
+        try:
+            UserRole(value)
+        except ValueError:
+            raise ValueError(f"Значение {value!r} инвалидное для UserRole")
+        if UserRole(value) not in [UserRole.USER, UserRole.HIGH_USER]:
+            raise ValueError(f"Вы можете только установить роль пользователя или high пользователя")
         return value

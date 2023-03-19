@@ -38,7 +38,7 @@ class FileApplicationService:
 
         return views.FileItem(
             id=file_id,
-            title=file.file_name,
+            title="noname" if not file.file_name else file.file_name,
             content_type=file_info.content_type
         )
 
@@ -83,6 +83,6 @@ class FileApplicationService:
             )
         return views.FileItem(
             id=file_id,
-            title=file.filename,
+            title="noname" if not file.filename else file.filename,
             content_type=file.content_type
         )
