@@ -36,6 +36,6 @@ class UserChatAssociationRepo(BaseRepository[tables.UserChatAssociation]):
             tables.User.id != user_id))
 
         result = await self.session.execute(request)
-        rows = result.all()
+        rows = result.fetchall()
         pass
 

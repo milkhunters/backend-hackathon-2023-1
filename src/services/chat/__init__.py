@@ -40,6 +40,10 @@ class ChatApplicationService:
         pass
 
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
+    async def get_message_history(self, chat_id):
+        pass
+
+    @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_my_dialogs(self) -> list[views.DialogItem]:
         dialogs = await self._user_chat_repo.get__info(self._current_user.id)
         pass

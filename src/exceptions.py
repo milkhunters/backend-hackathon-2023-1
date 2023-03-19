@@ -22,23 +22,35 @@ class APIError(StarletteHTTPException):
 
 
 class BadRequest(APIError):
-    def __init__(self, message: str = "Bad request") -> None:
-        super().__init__(message=message, status_code=400)
+    status_code = 400
+    message = "Bad request"
 
+    def __init__(self, message: str = None) -> None:
+        super().__init__(message=message if message else self.message, status_code=self.status_code)
 
 class AccessDenied(APIError):
-    def __init__(self, message: str = "Access denied") -> None:
-        super().__init__(message=message, status_code=403)
+    status_code = 403
+    message = "Access denied"
+
+    def __init__(self, message: str = None) -> None:
+        super().__init__(message=message if message else self.message, status_code=self.status_code)
 
 
 class NotFound(APIError):
-    def __init__(self, message: str = "Not Found") -> None:
-        super().__init__(message=message, status_code=404)
+    status_code = 404
+    message = "Not Found"
+
+    def __init__(self, message: str = None) -> None:
+        super().__init__(message=message if message else self.message, status_code=self.status_code)
 
 
 class AlreadyExists(APIError):
-    def __init__(self, message: str = "Already exists") -> None:
-        super().__init__(message=message, status_code=409)
+    status_code = 409
+    message = "Already exists"
+
+    def __init__(self, message: str = None) -> None:
+        super().__init__(message=message if message else self.message, status_code=self.status_code)
+
 
 
 async def handle_api_error(request, exc):
