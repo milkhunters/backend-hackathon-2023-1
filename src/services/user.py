@@ -7,15 +7,16 @@ from src.models.enums.role import UserRole
 from src.models.schemas.user import is_valid_password
 from src.services.auth import get_hashed_password, verify_password
 from src.services.auth.utils import filters
-from src.services.repository import UserRepo
+from src.services.repository import UserRepo, FileRepo
 
 
 class UserApplicationService:
 
-    def __init__(self, user_repo: UserRepo, *, current_user: Optional[tables.User], debug: bool = False):
+    def __init__(self, user_repo: UserRepo, file_repo: FileRepo, *, current_user: Optional[tables.User], debug: bool = False):
         self._repo = user_repo
         self._current_user = current_user
         self._debug = debug
+        self._file_repo = file_repo
 
     @filters(roles=[UserRole.ADMIN, UserRole.USER])
     async def get_me(self) -> schemas.User:
@@ -103,6 +104,10 @@ class UserApplicationService:
             hashed_password=hashed_password
         )
 
-    @filters(roles=[UserRole.ADMIN])
-    async def update_avatar(self, file: uuid.UUID):
-        pass
+    @filters(roles=[UserRole.ADMIN, UserRole.USER, UserRole.HIGH_USER])
+    async def update_my_avatar(self, file_id: uuid.UUID):
+        file = await self._file_repo.get(id=file_id)
+        if not file:
+            raise BadRequest(f"Файл {file_id} не был обнаружен!")
+
+        await self._repo.update(avatar_id=file_id, id=self._current_user.id)
