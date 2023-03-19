@@ -4,3 +4,7 @@ from src.views.base import BaseView
 
 class BannerResponse(BaseView):
     message: list[Banner]
+
+
+class BannerAddResponse(BaseView):
+    message: Banner

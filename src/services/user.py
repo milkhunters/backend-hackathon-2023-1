@@ -67,7 +67,6 @@ class UserApplicationService:
             raise AccessDenied("Вы не можете удалить самого себя")
 
     @filters(roles=[UserRole.ADMIN, UserRole.USER, UserRole.HIGH_USER])
-
     async def user_password_update_by_user(self, data: schemas.UserPasswordUpdate):
 
         user = await self._repo.get(id=self._current_user.id)

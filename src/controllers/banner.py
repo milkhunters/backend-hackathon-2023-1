@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+import uuid
+
+from fastapi import APIRouter, Depends, UploadFile
 from fastapi.requests import Request
 from fastapi.responses import Response
 from fastapi import status as http_status
@@ -6,8 +8,8 @@ from fastapi import status as http_status
 from src.dependencies.services import get_services
 from src.models import schemas
 from src.services import ServiceFactory
-from src.views import UserBigResponse
-from src.views.banner import BannerResponse
+from src.views import UserBigResponse, FileItem
+from src.views.banner import BannerResponse, BannerAddResponse
 
 router = APIRouter()
 
@@ -18,6 +20,6 @@ async def banner_list(service: ServiceFactory = Depends(get_services)):
 
 
 @router.post('/add', status_code=http_status.HTTP_204_NO_CONTENT)
-async def banner_add(request: Request, response: Response, service: ServiceFactory = Depends(get_services)):
-    pass
+async def banner_add(file_id: uuid.UUID, service: ServiceFactory = Depends(get_services)):
+    return await service.banner.add_banner(file_id)
 
