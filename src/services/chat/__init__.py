@@ -103,6 +103,7 @@ class ChatApplicationService:
                     job_title=companion.job_title,
                     department=companion.department,
                     avatar_id=str(companion.avatar_id) if companion.avatar_id else None,
+                    companion_id=str(companion.id),
                     message_count=await self._message_repo.count(chat_id=chat.id),
                     unread_count=await self._message_repo.count(chat_id=chat.id, is_read=False),  # todo: fix it
                     role=companion.role
@@ -138,6 +139,7 @@ class ChatApplicationService:
             job_title=companion.job_title,
             department=companion.department,
             avatar_id=str(companion.avatar_id) if companion.avatar_id else None,
+            companion_id=str(companion.id),
             unread_count=await self._message_repo.count(chat_id=chat_id, is_read=False),
             role=companion.role
         )

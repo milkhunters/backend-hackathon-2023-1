@@ -13,6 +13,7 @@ class DialogItem(BaseModel):
     job_title: str
     department: str
     avatar_id: Optional[str]
+    companion_id: str
     unread_count: int
     role: UserRole
 
