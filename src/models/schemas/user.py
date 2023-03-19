@@ -105,7 +105,6 @@ class UserPasswordUpdate(BaseModel):
         return value
 
 
-
 class UserUpdateByAdmin(BaseModel):
     email: Optional[str]
     role: Optional[UserRole]
