@@ -43,7 +43,6 @@ class ChatApplicationService:
             unread_count += count
         return unread_count
 
-
     @filters(roles=[UserRole.ADMIN, UserRole.HIGH_USER, UserRole.USER])
     async def get_message_history(self, chat_id) -> list[views.MessageOutput]:
         _ = await self._message_repo.get_all(chat_id=chat_id)
@@ -86,7 +85,7 @@ class ChatApplicationService:
                     departament=companion.department,
                     avatar_id=companion.avatar_id,
                     message_count=await self._message_repo.count(chat_id=chat.id),
-                    unread_count=await self._message_repo.count(chat_id=chat.id, is_read=False), # todo: fix it
+                    unread_count=await self._message_repo.count(chat_id=chat.id, is_read=False),  # todo: fix it
                     role=companion.role
                 )
             )
