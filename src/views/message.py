@@ -8,10 +8,10 @@ from src.models.schemas import MessageFileInclusion
 
 
 class MessageOutput(BaseModel):
-    id: uuid.UUID
+    id: str
     text: Optional[str]
-    avatar_id: Optional[uuid.UUID]
-    owner_id: uuid.UUID
+    avatar_id: Optional[str]
+    owner_id: str
     first_name: str
     last_name: str
     patronymic: Optional[str]

@@ -1,3 +1,4 @@
+import json
 import uuid
 from typing import Optional
 
@@ -97,7 +98,7 @@ class ChatApplicationService:
         chat_companions = await self._user_chat_repo.get_all(chat_id=chat_id)
         is_found = False
         for companion in chat_companions:
-            if self._current_user.id == companion.user_id:
+            if str(self._current_user.id) == str(companion.user_id):
                 is_found = True
 
         if not is_found:
@@ -111,10 +112,10 @@ class ChatApplicationService:
 
         ws = self._chat_manager.get_room_ws(room_id=chat_id)
         while websocket.client_state == WebSocketState.CONNECTED:
-            response = await ws.receive_json(websocket)
+            response = await ws.receive_text(websocket)
 
             try:
-                input_data = schemas.MessageInput(**response)
+                input_data = schemas.MessageInput(**json.loads(response))
             except ValueError:
                 raise BadRequest("Словарь должен соответствовать принимаемой модели")
 
@@ -146,23 +147,24 @@ class ChatApplicationService:
                     files.append(
                         schemas.MessageFileInclusion(
                             title=file.file_name,
-                            file_id=file.id
+                            file_id=str(file.id)
                         )
                     )
+                owner = await self._user_repo.get(id=self._current_user.id)
 
             output_data = views.MessageOutput(
-                id=message_id,
+                id=str(message_id),
                 text=input_data.text,
-                avatar_id=self._current_user.avatar_id,
-                owner_id=self._current_user.id,
-                first_name=self._current_user.first_name,
-                last_name=self._current_user.last_name,
-                patronymic=self._current_user.patronymic,
+                avatar_id=str(owner.avatar_id) if owner.avatar_id else None,
+                owner_id=str(owner.id),
+                first_name=owner.first_name,
+                last_name=owner.last_name,
+                patronymic=owner.patronymic,
                 files=files,
                 is_read=message_obj.is_read,
                 create_at=message_obj.create_at,
                 update_at=message_obj.update_at
             )
-            await self._chat_manager.send_data(chat_id, output_data.dict())
+            await self._chat_manager.send_data(chat_id, output_data.json())
 
         await self._chat_manager.disconnect(websocket, room_id=chat_id)
