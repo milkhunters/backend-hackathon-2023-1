@@ -28,8 +28,6 @@ async def update_user(data: schemas.UserUpdate, services: ServiceFactory = Depen
     await services.user.update_me(data)
 
 
-
 @router.put("/update_my_password", response_model=None, status_code=http_status.HTTP_200_OK)
 async def update_user_password(data: schemas.UserPasswordUpdate, services: ServiceFactory = Depends(get_services)):
     await services.user.user_password_update_by_user(data)
-
