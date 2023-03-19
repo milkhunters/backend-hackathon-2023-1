@@ -7,7 +7,8 @@ from src.dependencies.services import get_services
 from src.models import schemas
 from src.services import ServiceFactory
 
-from src.views.user import UserSmallResponse, UserSmallListResponse
+
+from src.views.user import UserSmallResponse, UserListResponse
 from src.views.user import UserBigResponse
 
 router = APIRouter()
@@ -18,7 +19,12 @@ async def get_current_user(services: ServiceFactory = Depends(get_services)):
     return UserBigResponse(message=await services.user.get_me())
 
 
-@router.get("/{user_id}", response_model=UserSmallResponse, status_code=http_status.HTTP_200_OK)
+@router.get("/list", response_model=UserListResponse, status_code=http_status.HTTP_200_OK)
+async def get_user_list(services: ServiceFactory = Depends(get_services)):
+    return UserListResponse(message=await services.user.get_user_list())
+
+
+@router.get("/{user_uuid}", response_model=UserSmallResponse, status_code=http_status.HTTP_200_OK)
 async def get_user(user_id: uuid.UUID, services: ServiceFactory = Depends(get_services)):
     return UserSmallResponse(message=await services.user.get_user(user_id))
 
@@ -35,9 +41,6 @@ async def update_user_password(data: schemas.UserPasswordUpdate, services: Servi
 
 @router.put("/update/avatar", response_model=None, status_code=http_status.HTTP_204_NO_CONTENT)
 async def update_avatar(file_id: uuid.UUID, service: ServiceFactory = Depends(get_services)):
-    await service.user.update_me(schemas.UserUpdate(avatar_id=file_id))
+    return await service.user.update_avatar(file_id)
 
 
-@router.get("/list", response_model=UserSmallListResponse, status_code=http_status.HTTP_200_OK)
-async def get_users(service: ServiceFactory = Depends(get_services)):
-    return UserSmallListResponse(message=await service.user.get_users())
