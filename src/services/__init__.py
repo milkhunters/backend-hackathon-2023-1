@@ -66,4 +66,8 @@ class ServiceFactory:
 
     @property
     def banner(self) -> BannerApplicationService:
-        return BannerApplicationService(banner_repo=self._repo.banner, current_user=self._current_user)
+        return BannerApplicationService(
+            banner_repo=self._repo.banner,
+            file_repo=self._repo.file,
+            current_user=self._current_user
+        )
