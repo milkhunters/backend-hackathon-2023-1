@@ -165,6 +165,6 @@ class ChatApplicationService:
                 create_at=message_obj.create_at,
                 update_at=message_obj.update_at
             )
-            await self._chat_manager.send_data(chat_id, output_data.dict())
+            await self._chat_manager.send_data(chat_id, output_data.json())
 
         await self._chat_manager.disconnect(websocket, room_id=chat_id)
